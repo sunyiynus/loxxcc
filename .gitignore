@@ -48,8 +48,5 @@ include/divisible/*
 .idea/*.xml
 
 build/**/*
-
-include/*.h
-lib/*
-bin/*
+include/config.h
 test/test_runner
