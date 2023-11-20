@@ -4,7 +4,7 @@
 //#include <vm.h>
 #include <string>
 #include "gtest/gtest.h"
-#include "utility.h"
+#include "Utility.h"
 #include "config.h"
 
 using namespace std;

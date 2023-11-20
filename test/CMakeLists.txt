@@ -4,8 +4,9 @@ project(divider_tests)
 add_subdirectory(lib/googletest)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
 
-include_directories(${DIVISION_HEADERS_DIR})
 include_directories(lib/googletest/googletest/include)
+include_directories(${LOXXCC_HEADERS_DIR})
+include_directories(${LOXXCC_INSTALL_INCLUDE_DIR})
 
 set(SOURCE_FILES main.cpp 
                  src/divider_tests.cpp

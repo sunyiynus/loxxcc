@@ -11,5 +11,5 @@ set(SOURCE_FILES
 
 add_library(loxcompile SHARED STATIC ${SOURCE_FILES})
 add_executable(loxcompiler compiler.cpp)
-install(TARGETS loxcompile DESTINATION ${DIVISIBLE_INSTALL_LIB_DIR})
-install(FILES compiler.h DESTINATION ${DIVISIBLE_INSTALL_INCLUDE_DIR})
+install(TARGETS loxcompile DESTINATION ${LOXXCC_INSTALL_LIB_DIR})
+install(FILES compiler.h DESTINATION ${LOXXCC_INSTALL_INCLUDE_DIR})
