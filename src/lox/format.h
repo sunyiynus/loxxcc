@@ -11,13 +11,6 @@ constexpr std::string::value_type RIGHT_PAREN = '}';
 enum {Se = 0, S1, S2, S3, S4};
 enum {Ce = 0, C1, C2, C3, C4};
 
-
-
-
-
-
-
-
 template<typename T = std::string::value_type>
 class basic_format {
 public: 
@@ -80,7 +73,7 @@ public:
             auto c = classify(formatStr[i]);
             state = stateMap[state][c];
 
-            if (state == S2) {
+            if (state == S2 && predC1(formatStr[i])) {
                 stk.push(i);
             } else if (state == S3) {
                 if (stk.empty()) {
@@ -88,8 +81,11 @@ public:
                 }
                 auto leftParenIdx = stk.top();
                 stk.pop();
-                Field strField {PlaceType::STRING, preEdge, leftParenIdx - preEdge};
-                fieldsList.push_back(strField);
+                int strLen = leftParenIdx - preEdge;
+                if (strLen != 0) {
+                    Field strField {PlaceType::STRING, preEdge, static_cast<std::size_t>(strLen)};
+                    fieldsList.push_back(strField);
+                }
                 Field placeField {PlaceType::PLACE_HOLDER};
                 fieldsList.push_back(placeField);
                 preEdge = i + 1;

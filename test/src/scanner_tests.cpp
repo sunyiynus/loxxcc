@@ -38,3 +38,19 @@ TEST(format, SplitsTest)
     ff.toString();
     ASSERT_EQ(ff.getFieldList().size(),3);
 }
+
+TEST(format, SplitsTest_1)
+{
+    auto ff = Format::format("{}name{1}name\n") % 1 % 2;
+    ASSERT_EQ(ff.getFieldList().size(),0);
+    ff.toString();
+    ASSERT_EQ(ff.getFieldList().size(),4);
+}
+
+TEST(format, SplitsTest_2)
+{
+    auto ff = Format::format("{1}{2}{3}name{}{}\n") % 1 % 1;
+    ASSERT_EQ(ff.getFieldList().size(),0);
+    ff.toString();
+    ASSERT_EQ(ff.getFieldList().size(),7);
+}
