@@ -26,9 +26,7 @@ public:
         return basic_format(formatStr);
     }
 
-    basic_format(const char* str): formatStr(str) {
-        convert2StringList();
-    }
+    basic_format(const char* str): formatStr(str), state(S1) {}
 
 
     template<typename ArgT>
@@ -52,18 +50,16 @@ public:
     void convert2StringList()
     {
         std::stack<std::string::size_type> stk;
-        std::string::size_type pre = 0; 
-        const static int stateMap[5][5] = {
+        const static int stateMap[4][5] = {
         {Se, Se, Se, Se, Se},
-        {Se, S2, S1, S3, S1},
         {Se, S2, S1, S1, S1},
-        {Se, S1, S4, S3, S1},
+        {Se, S2, S3, S2, S1},
         {Se, S2, S1, S1, S1}};
 
         auto predC1 = [](std::string::value_type c) -> bool { return c == LEFT_PAREN; };
         auto predC2 = [](std::string::value_type c) -> bool { return c == RIGHT_PAREN; };
         auto predC3 = [](std::string::value_type c) -> bool { return isdigit(c);};
-        auto predC4 = [](std::string::value_type c) -> bool { return isalpha(c) && c != LEFT_PAREN && c != RIGHT_PAREN;};
+        auto predC4 = [&](std::string::value_type c) -> bool { return isprint(c) && !predC1(c) && !predC2(c) && !predC3(c);};
 
         auto classify = [&](std::string::value_type c) -> int {
             if (predC1(c)) {
@@ -86,7 +82,7 @@ public:
 
             if (state == S2) {
                 stk.push(i);
-            } else if (state == S4) {
+            } else if (state == S3) {
                 if (stk.empty()) {
                     throw std::out_of_range("error");
                 }
@@ -111,8 +107,10 @@ public:
 
     std::string toString()
     {
-
+        convert2StringList();
+        return {};
     }
+
     std::list<Field>& getFieldList() {
         return fieldsList;
     }

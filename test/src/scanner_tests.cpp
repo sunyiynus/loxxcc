@@ -25,7 +25,16 @@ TEST(scanner_Test, SrcInit)
 
 TEST(format, Init)
 {
-    auto ff = Format::format("name{1}\n") % 1;
+    auto ff = Format::format("name{1}") % 1;
+    ASSERT_EQ(ff.getFieldList().size(),0);
+    ff.toString();
     ASSERT_EQ(ff.getFieldList().size(),2);
+}
 
+TEST(format, SplitsTest)
+{
+    auto ff = Format::format("name{1}name\n") % 1;
+    ASSERT_EQ(ff.getFieldList().size(),0);
+    ff.toString();
+    ASSERT_EQ(ff.getFieldList().size(),3);
 }
