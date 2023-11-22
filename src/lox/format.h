@@ -20,6 +20,8 @@ public:
     }
 
     basic_format(const char* str): formatStr(str), state(S1) {}
+    // basic_format(basic_format&& bf)
+    // : fieldsList(std::move(bf.fieldsList)), args(std::move(bf.args)), formatStr(std::move(bf.formatStr)) {}
 
 
     template<typename ArgT>
@@ -104,7 +106,24 @@ public:
     std::string toString()
     {
         convert2StringList();
-        return {};
+        return renderResult();
+    }
+    std::string renderResult()
+    {
+        std::string res;
+        std::vector<std::string>::size_type argIdx = 0;
+        for (auto& filed: fieldsList) {
+            if (filed.type == PlaceType::STRING) {
+                res += std::string (formatStr.begin() + filed.begin, formatStr.begin() + filed.begin + filed.len);
+            } else if (filed.type == PlaceType::PLACE_HOLDER) {
+                if (argIdx >= args.size()) {
+                    throw std::out_of_range("args number wasn't enough.");
+                }
+                res += args[argIdx];
+                argIdx++;
+            }
+        }
+        return res;
     }
 
     std::list<Field>& getFieldList() {
@@ -124,9 +143,17 @@ private:
 
 
 template<typename T>
-std::ostream& operator<<(std::ostream& out, const basic_format<T> formatStr)
+std::ostream& operator<<(std::ostream& out, basic_format<T>& formatStr)
 {
     return out << formatStr.toString();    
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& out, basic_format<T>&& formatStr)
+{
+    // basic_format<T> tmp = std::move(formatStr);
+    // return out << tmp.toString();    
+    return out;
 }
 
 
