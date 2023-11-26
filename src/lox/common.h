@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include <cstdint>
 
 enum class TokenType {
@@ -37,27 +38,56 @@ struct Token
 
 namespace SingleCharactor
 {
-    constexpr std::string::value_type Dot = '.';
-    constexpr std::string::value_type Comma = ',';
-    constexpr std::string::value_type Assign = '=';
-    constexpr std::string::value_type Semicon = ';';
-    constexpr std::string::value_type LeftParen = '(';
-    constexpr std::string::value_type RightParen = ')';
-    constexpr std::string::value_type RightBrace = '}';
-    constexpr std::string::value_type LeftBrace = '{';
-    constexpr std::string::value_type Greater = '>';
-    constexpr std::string::value_type Less = '<';
-    constexpr std::string::value_type Slash = '/';
-    constexpr std::string::value_type Plus = '+';
-    constexpr std::string::value_type Star = '*';
-    constexpr std::string::value_type Minus = '-';
-    constexpr std::string::value_type Bang = '!';
-    constexpr std::string::value_type NewLine = '\n';
-    constexpr std::string::value_type WhiteSpace = ' ';
+    constexpr std::string::value_type Dot         = '.';
+    constexpr std::string::value_type Comma       = ',';
+    constexpr std::string::value_type Assign      = '=';
+    constexpr std::string::value_type Semicon     = ';';
+    constexpr std::string::value_type LeftParen   = '(';
+    constexpr std::string::value_type RightParen  = ')';
+    constexpr std::string::value_type RightBrace  = '}';
+    constexpr std::string::value_type LeftBrace   = '{';
+    constexpr std::string::value_type Greater     = '>';
+    constexpr std::string::value_type Less        = '<';
+    constexpr std::string::value_type Slash       = '/';
+    constexpr std::string::value_type Plus        = '+';
+    constexpr std::string::value_type Star        = '*';
+    constexpr std::string::value_type Minus       = '-';
+    constexpr std::string::value_type Bang        = '!';
+    constexpr std::string::value_type NewLine     = '\n';
+    constexpr std::string::value_type WhiteSpace  = ' ';
     constexpr std::string::value_type DoubleQuote = '"';
     constexpr std::string::value_type SingleQuote = '\'';
 
 } // namespace SingleCharactor
+
+namespace Keywords
+{
+    const std::string Class    = "class";
+    const std::string Func     = "func";
+    const std::string Nil      = "nil";
+    const std::string Return   = "return";
+    const std::string Print    = "print";
+    const std::string If       = "if";
+    const std::string Else     = "else";
+    const std::string While    = "while";
+    const std::string Continue = "continue";
+    const std::string Break    = "break";
+    const std::string Var      = "var";
+
+    const std::map<std::string, TokenType> Table { {Class, TokenType::CLASS},
+                                                    {Func, TokenType::FUNC},
+                                                    {Nil, TokenType::NILL},
+                                                    {Return, TokenType::RETURN},
+                                                    {Print, TokenType::PRINT},
+                                                    {If, TokenType::IF},
+                                                    {Else, TokenType::ELSE},
+                                                    {While, TokenType::WHILE},
+                                                    {Continue, TokenType::CONTINUE},
+                                                    {Break, TokenType::BREAK},
+                                                    {Var, TokenType::VAR},
+                                                    };
+
+} // namespace Keywords
 
 
 

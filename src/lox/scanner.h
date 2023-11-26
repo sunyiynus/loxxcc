@@ -23,6 +23,7 @@ public:
     void numbers();
     void strings();
     void identifer();
+    void comments();
 
     void error();
     ErrorInfo genErrorInfo();

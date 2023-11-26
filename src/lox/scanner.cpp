@@ -37,7 +37,7 @@ const TokensType& Scanner::scanTokens()
         case SingleCharactor::RightBrace:
             makeToken(TokenType::RIGHT_BRACE);
             break;
-        case SingleCharactor::RightParen:
+        case SingleCharactor::RightParen: 
             makeToken(TokenType::RIGHT_PAREN);
             break;
         case SingleCharactor::LeftParen:
@@ -66,7 +66,12 @@ const TokensType& Scanner::scanTokens()
             }
             break;
         case SingleCharactor::Slash:
-            makeToken(TokenType::SLASH);
+            if (forwardMatch(SingleCharactor::Slash)) {
+                advanceHead();
+                comments();
+            } else {
+                makeToken(TokenType::SLASH);
+            }
             break;
         case SingleCharactor::Plus:
             makeToken(TokenType::PLUS);
@@ -85,12 +90,13 @@ const TokensType& Scanner::scanTokens()
         case SingleCharactor::NewLine:
             lineCount();
             advance();
+            advanceHead();
+            advanceTail();
             break;
         case SingleCharactor::Minus:
             if (forwardMatch([](const char c)->bool{ return std::isdigit(c);})) {
                 advanceHead();
                 numbers();
-                makeToken(TokenType::NUMBER);
             } else {
                 makeToken(TokenType::MINUS);
             }
@@ -216,7 +222,22 @@ void Scanner::identifer()
         advanceHead();
     }
     std::string::size_type cnt = head - tail;
-    tokens.emplace_back(src.substr(tail, cnt), src.substr(tail,cnt), currenLine, TokenType::IDENTIFIER);
+    std::string lexeme = src.substr(tail, cnt);
+    TokenType type = TokenType::IDENTIFIER;
+    const auto res = Keywords::Table.find(lexeme);
+    if ( res != Keywords::Table.end()) {
+        type = res->second;
+    }
+    tokens.emplace_back(lexeme, lexeme, currenLine, type);
+    advance();
+}
+
+void Scanner::comments()
+{
+    while (current() != SingleCharactor::NewLine) {
+        advanceHead();
+    }
+    advanceHead(); // next line,
     advance();
 }
 
