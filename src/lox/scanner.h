@@ -14,12 +14,15 @@ public:
     bool atEnd() const;
     std::string::value_type current();
     void makeToken(TokenType type);
+    void advanceHead();
+    void advanceTail();
     void advance();
     void lineCount();
     bool forwardMatch(const char target);
     bool forwardMatch(std::function<bool(const char)> predict);
     void numbers();
     void strings();
+    void identifer();
 
     void error();
     ErrorInfo genErrorInfo();
@@ -28,8 +31,8 @@ public:
 private:
     std::string src;
     std::string srcFileName;
-    std::string::size_type begin;
-    std::string::size_type end;
+    std::string::size_type tail;
+    std::string::size_type head;
     std::uint64_t currenLine;
     TokensType tokens;
 };

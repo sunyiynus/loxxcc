@@ -21,6 +21,7 @@ enum class TokenType {
     // keywords
     CLASS, FUNC, NILL, RETURN, PRINT, IF, ELSE, WHILE,
     CONTINUE, BREAK, VAR,
+    F_EOF,
 };
 
 

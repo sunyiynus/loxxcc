@@ -1,7 +1,7 @@
 #include "scanner.h"
 
 
-Scanner::Scanner(const std::string& s): src(s), begin(0), end(0) {}
+Scanner::Scanner(const std::string& s): src(s), head(0), tail(0) {}
 
 
 const TokensType& Scanner::scanTokens()
@@ -19,10 +19,10 @@ const TokensType& Scanner::scanTokens()
             break;
         case SingleCharactor::Assign:
             if (forwardMatch(SingleCharactor::Assign)) {
-                begin++;
-                makeToken(TokenType::EQUAL);
+                advanceHead();
+                makeToken(TokenType::EQUAL_EQUAL);
             } else {
-                makeToken(TokenType::DOT);
+                makeToken(TokenType::EQUAL);
             }
             break;
         case SingleCharactor::Comma:
@@ -45,8 +45,10 @@ const TokensType& Scanner::scanTokens()
             break;
         case SingleCharactor::Greater:
             if (forwardMatch(SingleCharactor::Assign)) {
+                advanceHead();
                 makeToken(TokenType::GREATER_EQUAL);
             } else if (forwardMatch(SingleCharactor::Greater)) {
+                advanceHead();
                 makeToken(TokenType::RIGHT_SHIFT);
             } else {
                 makeToken(TokenType::GREATER);
@@ -54,8 +56,10 @@ const TokensType& Scanner::scanTokens()
             break;
         case SingleCharactor::Less:
             if (forwardMatch(SingleCharactor::Assign)) {
+                advanceHead();
                 makeToken(TokenType::LESS_EQUAL);
             } else if (forwardMatch(SingleCharactor::Less)) {
+                advanceHead();
                 makeToken(TokenType::LEFT_SHIFT);
             } else {
                 makeToken(TokenType::LESS);
@@ -72,6 +76,7 @@ const TokensType& Scanner::scanTokens()
             break;
         case SingleCharactor::Bang:
             if (forwardMatch(SingleCharactor::Assign)) {
+                advanceHead();
                 makeToken(TokenType::BANG_EQUAL);
             } else {
                 makeToken(TokenType::BANG);
@@ -83,7 +88,7 @@ const TokensType& Scanner::scanTokens()
             break;
         case SingleCharactor::Minus:
             if (forwardMatch([](const char c)->bool{ return std::isdigit(c);})) {
-                begin++;
+                advanceHead();
                 numbers();
                 makeToken(TokenType::NUMBER);
             } else {
@@ -91,13 +96,20 @@ const TokensType& Scanner::scanTokens()
             }
             break;
         case SingleCharactor::WhiteSpace:
-            advance();
+            advanceHead();
+            advanceTail();
             break;
         case SingleCharactor::DoubleQuote:
             strings();
-            makeToken(TokenType::STRING);
             break;
         default:
+            if (std::isdigit(current())) {
+                numbers();
+            } else if (std::isalpha(current())) {
+                identifer();
+            } else {
+                advanceHead();
+            }
             break;
         }
     }
@@ -108,26 +120,36 @@ const TokensType& Scanner::scanTokens()
 
 bool Scanner::atEnd() const
 {
-    return !(begin < src.size());
+    return !(tail < src.size());
 }
 
 
 std::string::value_type Scanner::current()
 {
-    return src[begin];
+    return src[head];
 }
 
 void Scanner::makeToken(TokenType type)
 {
-    begin++;
-    tokens.emplace_back(src.substr(end, begin), src.substr(end,begin), currenLine, type);
+    advanceHead();
+    std::string::size_type cnt = head - tail;
+    tokens.emplace_back(src.substr(tail, cnt), src.substr(tail,cnt), currenLine, type);
     advance();
 }
 
 void Scanner::advance()
 {
-    end = begin,
-    begin++;
+    tail = head;
+}
+
+void Scanner::advanceHead()
+{
+    head++;
+}
+
+void Scanner::advanceTail()
+{
+    tail++;
 }
 
 void Scanner::lineCount()
@@ -138,33 +160,64 @@ void Scanner::lineCount()
 
 bool Scanner::forwardMatch(const char target)
 {
-    auto tmp = begin + 1;
+    auto tmp = tail + 1;
     return (src[tmp] == target);
 }
 
 bool Scanner::forwardMatch(std::function<bool(const char)> predict)
 {
-    auto tmp = begin + 1;
+    auto tmp = head + 1;
     return predict(src[tmp]);
 }
 
 void Scanner::numbers()
 {
-    while (std::isdigit(current())) {
-        begin++;
+    int dotCnt = 1;
+    auto isDot = [](char c)->bool { return c == SingleCharactor::Dot;};
+    while (std::isdigit(current()) || isDot(current())) {
+        if (dotCnt < 0) {
+            // error
+        }
+        if (isDot(current())) {
+            dotCnt--;
+        }
+        advanceHead();
     }
+    std::string::size_type cnt = head - tail;
+    tokens.emplace_back(src.substr(tail, cnt), src.substr(tail,cnt), currenLine, TokenType::NUMBER);
+    advance();
 }
 
 void Scanner::strings()
 {
-    begin++;
+    advanceTail();
+    advanceHead();
     while (std::isprint(current())) {
         if (current() == SingleCharactor::DoubleQuote) {
-
+            break;
         } else if (current() == SingleCharactor::NewLine) {
             error();
+        } else {
+            advanceHead();
         }
     }
+
+    std::string::size_type cnt = head - tail;
+    tokens.emplace_back(src.substr(tail, cnt), src.substr(tail,cnt), currenLine, TokenType::STRING);
+    advanceHead();
+    advance();
+}
+
+void Scanner::identifer()
+{
+    advanceHead();
+    auto isIdentify = [](const char c) -> bool { return std::isalpha(c) || c == '_' || std::isdigit(c);};
+    while (isIdentify(current())) {
+        advanceHead();
+    }
+    std::string::size_type cnt = head - tail;
+    tokens.emplace_back(src.substr(tail, cnt), src.substr(tail,cnt), currenLine, TokenType::IDENTIFIER);
+    advance();
 }
 
 void Scanner::error()
