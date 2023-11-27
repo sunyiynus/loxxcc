@@ -153,6 +153,18 @@ TEST(ScannerClass_test, testcase_expression_002)
     ASSERT_EQ(tokens[2].token, TokenType::NUMBER);
 }
 
+TEST(ScannerClass_test, testcase_expression_003)
+{
+    string src = "a1 =  -10.2 * f / ( 5 - aa / ( b -c)) ;   ";
+    ASSERT_FALSE(src.empty());
+    Scanner lexer(src);
+    auto tokens = lexer.scanTokens();
+    std::cout << tokens;
+    ASSERT_EQ(tokens.size(), 18);
+    ASSERT_EQ(tokens[2].lexeme, string("-10.2"));
+    ASSERT_EQ(tokens[2].token, TokenType::NUMBER);
+}
+
 TEST(ScannerClass_test, testcase_vars_001)
 {
     string src = "var a1 =  -10.2 ;   ";
@@ -195,17 +207,6 @@ TEST(ScannerClass_test, testcase_keyword_002)
     ASSERT_EQ(tokens[37].token, TokenType::RETURN);
 }
 
-void PrintTokens(const vector<Token>& tokens) {
-    int cnt = 1;
-    for (const auto& token: tokens) {
-        std::cout << token.lexeme << " ";
-        if (cnt % 10 == 0) {
-            std::cout << std::endl;
-        }
-        cnt++;
-    }
-    std::cout << std::endl;
-}
 
 
 TEST(ScannerClass_test, testcase_keyword_003)
@@ -214,7 +215,6 @@ TEST(ScannerClass_test, testcase_keyword_003)
     ASSERT_FALSE(src.empty());
     Scanner lexer(src);
     auto tokens = lexer.scanTokens();
-    PrintTokens(tokens);
     ASSERT_EQ(tokens.size(), 81);
     ASSERT_EQ(tokens[3].lexeme, string("fn"));
     ASSERT_EQ(tokens[3].token, TokenType::FUNC);

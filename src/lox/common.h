@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <iostream>
 #include <cstdint>
 
 enum class TokenType {
@@ -94,6 +95,9 @@ namespace Keywords
 
 
 using TokensType = std::vector<Token>;
+
+std::ostream& operator<<(std::ostream& outstream, const std::vector<Token>& tokens);
+
 
 
 

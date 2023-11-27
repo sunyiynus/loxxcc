@@ -1,5 +1,18 @@
 #include "scanner.h"
+#include "common.h"
 
+std::ostream& operator<<(std::ostream& outstream, const std::vector<Token>& tokens)
+{
+    int cnt = 1;
+    for (const auto& token: tokens) {
+        outstream << token.lexeme << " ";
+        if (cnt % 10 == 0) {
+            outstream << std::endl;
+        }
+        cnt++;
+    }
+    return (outstream << std::endl);
+}
 
 Scanner::Scanner(const std::string& s): src(s), head(0), tail(0) {}
 
