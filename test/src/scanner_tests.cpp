@@ -152,3 +152,76 @@ TEST(ScannerClass_test, testcase_expression_002)
     ASSERT_EQ(tokens[2].lexeme, string("-10.2"));
     ASSERT_EQ(tokens[2].token, TokenType::NUMBER);
 }
+
+TEST(ScannerClass_test, testcase_vars_001)
+{
+    string src = "var a1 =  -10.2 ;   ";
+    ASSERT_FALSE(src.empty());
+    Scanner lexer(src);
+    auto tokens = lexer.scanTokens();
+    ASSERT_EQ(tokens.size(), 5);
+    ASSERT_EQ(tokens[3].lexeme, string("-10.2"));
+    ASSERT_EQ(tokens[3].token, TokenType::NUMBER);
+    ASSERT_EQ(tokens[0].token, TokenType::VAR);
+}
+
+TEST(ScannerClass_test, testcase_keyword_001)
+{
+    string src = "var idx = 0; while ( idx < 10) { idx = idx + 1; if (idx == 2) {continue;}}";
+    ASSERT_FALSE(src.empty());
+    Scanner lexer(src);
+    auto tokens = lexer.scanTokens();
+    ASSERT_EQ(tokens.size(), 29);
+    ASSERT_EQ(tokens[3].lexeme, string("0"));
+    ASSERT_EQ(tokens[3].token, TokenType::NUMBER);
+    ASSERT_EQ(tokens[0].token, TokenType::VAR);
+    ASSERT_EQ(tokens[1].token, TokenType::IDENTIFIER);
+    ASSERT_EQ(tokens[5].token, TokenType::WHILE);
+}
+
+TEST(ScannerClass_test, testcase_keyword_002)
+{
+    string src = "fn func_01(i, m) {var idx = 0; while ( idx < 10) { idx = idx + 1; if (idx == 2) {continue;}} return 0;}";
+    ASSERT_FALSE(src.empty());
+    Scanner lexer(src);
+    auto tokens = lexer.scanTokens();
+    ASSERT_EQ(tokens.size(), 41);
+    ASSERT_EQ(tokens[3].lexeme, string("i"));
+    ASSERT_EQ(tokens[3].token, TokenType::IDENTIFIER);
+    ASSERT_EQ(tokens[0].token, TokenType::FUNC);
+    ASSERT_EQ(tokens[1].token, TokenType::IDENTIFIER);
+    ASSERT_EQ(tokens[5].token, TokenType::IDENTIFIER);
+    ASSERT_EQ(tokens[4].token, TokenType::COMMA);
+    ASSERT_EQ(tokens[37].token, TokenType::RETURN);
+}
+
+void PrintTokens(const vector<Token>& tokens) {
+    int cnt = 1;
+    for (const auto& token: tokens) {
+        std::cout << token.lexeme << " ";
+        if (cnt % 10 == 0) {
+            std::cout << std::endl;
+        }
+        cnt++;
+    }
+    std::cout << std::endl;
+}
+
+
+TEST(ScannerClass_test, testcase_keyword_003)
+{
+    auto src = Utility::ReadFile(Utility::PathJoin({g_loxSourceDir, "test", "lox", "normal.lox"}));
+    ASSERT_FALSE(src.empty());
+    Scanner lexer(src);
+    auto tokens = lexer.scanTokens();
+    PrintTokens(tokens);
+    ASSERT_EQ(tokens.size(), 81);
+    ASSERT_EQ(tokens[3].lexeme, string("fn"));
+    ASSERT_EQ(tokens[3].token, TokenType::FUNC);
+    ASSERT_EQ(tokens[0].token, TokenType::CLASS);
+    ASSERT_EQ(tokens[1].token, TokenType::IDENTIFIER);
+    ASSERT_EQ(tokens[6].token, TokenType::IDENTIFIER);
+    ASSERT_EQ(tokens[4].token, TokenType::IDENTIFIER);
+    ASSERT_EQ(tokens[73].token, TokenType::RIGHT_PAREN);
+
+}

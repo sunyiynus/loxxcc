@@ -21,7 +21,7 @@ enum class TokenType {
 
     // keywords
     CLASS, FUNC, NILL, RETURN, PRINT, IF, ELSE, WHILE,
-    CONTINUE, BREAK, VAR,
+    CONTINUE, BREAK, VAR, THIS,
     F_EOF,
 };
 
@@ -63,7 +63,7 @@ namespace SingleCharactor
 namespace Keywords
 {
     const std::string Class    = "class";
-    const std::string Func     = "func";
+    const std::string Func     = "fn";
     const std::string Nil      = "nil";
     const std::string Return   = "return";
     const std::string Print    = "print";
@@ -73,6 +73,7 @@ namespace Keywords
     const std::string Continue = "continue";
     const std::string Break    = "break";
     const std::string Var      = "var";
+    const std::string This     = "this";
 
     const std::map<std::string, TokenType> Table { {Class, TokenType::CLASS},
                                                     {Func, TokenType::FUNC},
@@ -85,6 +86,7 @@ namespace Keywords
                                                     {Continue, TokenType::CONTINUE},
                                                     {Break, TokenType::BREAK},
                                                     {Var, TokenType::VAR},
+                                                    {This, TokenType::THIS},
                                                     };
 
 } // namespace Keywords

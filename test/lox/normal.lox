@@ -1,0 +1,35 @@
+class Pet {
+    fn feeding(food) {
+
+    }
+}
+
+class Dog < Pet {
+    fn inDog() {
+        return this;
+    }
+
+    fn feeding(food) {
+        print "eating " food;
+    }
+
+    fn wooh() {
+        print "wooh";
+    }
+
+    var name;
+    var kindName = "dog";
+}
+
+// 51 tokens
+
+// this is line comment for testing;
+
+var food = "Cat fooed";
+var dog = Dog.inDog(); // 65
+dog.feeding(food); // 72
+dog.wooh();
+
+
+
+
