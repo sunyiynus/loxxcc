@@ -25,19 +25,15 @@ class Visitor;
 
 template <typename T>
 class Visitor<T> {
-    VisitorAbsResult::ptr visit(T* expr) override {
-        return expr.accept(this);
-    }
+    virtual VisitorAbsResult::ptr visit(T* expr) = 0;
 };
 
 
 template <typename T, typename ... Args>
 class Visitor<T, Args...> {
 public:
-    using Visitor<Args...>::visit();
-    VisitorAbsResult::ptr visit(T* expr) override {
-        return expr.accept(this);
-    }
+    using Visitor<Args...>::visit;
+    virtual VisitorAbsResult::ptr visit(T* expr) = 0;
     
 };
 
@@ -56,6 +52,7 @@ using ExprVisitor  = Visitor<BinaryExpr, UaryExpr>;
 
 class AbsExpr {
 public:
+    using ptr = std::shared_ptr<AbsExpr>;
     virtual VisitorAbsResult::ptr accept(ExprVisitor* visitor) = 0;
 private:
 };
