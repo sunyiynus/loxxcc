@@ -34,27 +34,37 @@ public:
     }
 };
 
+template<typename DeriveT>
+struct add_ptr_typedef {
+    using ptr = std::shared_ptr<DeriveT>;
+};
 
-class BinaryExpr : public Visitable<BinaryExpr> {
+class BinaryExpr : public Visitable<BinaryExpr>, add_ptr_typedef<BinaryExpr> {
 public:
 
-private:
-    Token leftOpand;
+    AbsExpr::ptr lOperand;
+    Token op;
+    AbsExpr::ptr rOperand;
 }; 
 
 class UnaryExpr : public Visitable<UnaryExpr> {
 public:
+
+    Token op;
+    AbsExpr::ptr rOperand;
 
 }; 
 
 class GroupExpr : public Visitable<GroupExpr> {
 public:
 
+    AbsExpr::ptr subExpr;
 }; 
 
-class LiteralExpr : public Visitable<LiteralExpr> {
-public:
 
+class LiteralExpr : public Visitable<LiteralExpr>, add_ptr_typedef<LiteralExpr> {
+public:
+    Token literal;
 }; 
 
 
