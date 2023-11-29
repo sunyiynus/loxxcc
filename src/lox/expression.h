@@ -3,50 +3,16 @@
 
 #include <memory>
 #include <string>
-
-struct VisitorAbsResult {
-    int type;
-    using ptr = std::unique_ptr<VisitorAbsResult>;
-    std::string resultStr;
-};
-
-
-class AbsExpr;
-
-class AbsVisitor {
-public:
-    virtual VisitorAbsResult::ptr visit(AbsExpr* expr) = 0;
-};
-
-
-template <typename...Args>
-class Visitor;
-
-
-template <typename T>
-class Visitor<T> {
-    virtual VisitorAbsResult::ptr visit(T* expr) = 0;
-};
-
-
-template <typename T, typename ... Args>
-class Visitor<T, Args...> {
-public:
-    using Visitor<Args...>::visit;
-    virtual VisitorAbsResult::ptr visit(T* expr) = 0;
-    
-};
+#include "common.h"
+#include "visitor.h"
 
 
 class BinaryExpr;
-class UaryExpr;
+class UnaryExpr;
+class GroupExpr;
+class LiteralExpr;
 
-using ExprVisitor  = Visitor<BinaryExpr, UaryExpr>;
-
-
-
-
-
+using ExprVisitor  = Visitor<BinaryExpr, UnaryExpr, GroupExpr, LiteralExpr>;
 
 
 
@@ -72,8 +38,24 @@ public:
 class BinaryExpr : public Visitable<BinaryExpr> {
 public:
 
+private:
+    Token leftOpand;
 }; 
 
+class UnaryExpr : public Visitable<UnaryExpr> {
+public:
+
+}; 
+
+class GroupExpr : public Visitable<GroupExpr> {
+public:
+
+}; 
+
+class LiteralExpr : public Visitable<LiteralExpr> {
+public:
+
+}; 
 
 
 

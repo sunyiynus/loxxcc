@@ -4,6 +4,7 @@
 
 class Printer : public ExprVisitor {
 public:
+    VisitorAbsResult::ptr visit(BinaryExpr* expr) override;
 
 };
 
