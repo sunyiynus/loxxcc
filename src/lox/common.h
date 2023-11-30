@@ -29,7 +29,22 @@ enum class TokenType {
 
 struct Token 
 {
+    // Token(Token&& tk) {
+    //     literal = std::move(tk.lexeme);
+    //     lexeme = std::move(tk.lexeme);
+    //     line = tk.line;
+    //     token = tk.token;
+    // }
+    Token() = default;
+    Token(const Token& ) = default;
     Token(const std::string l, const std::string lee, const std::uint64_t ll, const TokenType ty): literal(l), lexeme(lee), line(ll), token(ty) {}
+    Token& operator=(Token&& tk) {
+        literal = std::move(tk.lexeme);
+        lexeme = std::move(tk.lexeme);
+        line = tk.line;
+        token = tk.token;
+        return *this;
+    }
     std::string literal;
     std::string lexeme;
     std::uint64_t line;

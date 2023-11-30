@@ -27,7 +27,7 @@ private:
 
 
 template <typename DeriveT>
-class Visitable : public AbsExpr {
+class VisitableExpr : public AbsExpr {
 public:
     VisitorAbsResult::ptr accept(ExprVisitor* visitor) {
         return visitor->visit(static_cast<DeriveT*>(this));
@@ -39,15 +39,15 @@ struct add_ptr_typedef {
     using ptr = std::shared_ptr<DeriveT>;
 };
 
-class BinaryExpr : public Visitable<BinaryExpr>, add_ptr_typedef<BinaryExpr> {
+class BinaryExpr : public VisitableExpr<BinaryExpr> {
 public:
-
+    BinaryExpr() = default;
     AbsExpr::ptr lOperand;
     Token op;
     AbsExpr::ptr rOperand;
 }; 
 
-class UnaryExpr : public Visitable<UnaryExpr> {
+class UnaryExpr : public VisitableExpr<UnaryExpr> {
 public:
 
     Token op;
@@ -55,15 +55,16 @@ public:
 
 }; 
 
-class GroupExpr : public Visitable<GroupExpr> {
+class GroupExpr : public VisitableExpr<GroupExpr> {
 public:
 
     AbsExpr::ptr subExpr;
 }; 
 
 
-class LiteralExpr : public Visitable<LiteralExpr>, add_ptr_typedef<LiteralExpr> {
+class LiteralExpr : public VisitableExpr<LiteralExpr> {
 public:
+    LiteralExpr() = default;
     Token literal;
 }; 
 

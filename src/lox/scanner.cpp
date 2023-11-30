@@ -152,7 +152,8 @@ void Scanner::makeToken(TokenType type)
 {
     advanceHead();
     std::string::size_type cnt = head - tail;
-    tokens.emplace_back(src.substr(tail, cnt), src.substr(tail,cnt), currenLine, type);
+    std::string substr = src.substr(tail, cnt);
+    tokens.emplace_back(substr, substr, currenLine, type);
     advance();
 }
 

@@ -7,6 +7,10 @@ set(SOURCE_FILES
     errors.cpp
     scanner.h
     scanner.cpp
+    printer.h
+    printer.cpp
+    expression.h
+    expression.cpp
 )
 
 add_library(loxcompile SHARED STATIC ${SOURCE_FILES})

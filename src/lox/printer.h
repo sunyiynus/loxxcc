@@ -4,7 +4,11 @@
 
 class Printer : public ExprVisitor {
 public:
+    Printer() = default;
     VisitorAbsResult::ptr visit(BinaryExpr* expr) override;
+    VisitorAbsResult::ptr visit(UnaryExpr* expr) override;
+    VisitorAbsResult::ptr visit(GroupExpr* expr) override;
+    VisitorAbsResult::ptr visit(LiteralExpr* expr) override;
 
 };
 
