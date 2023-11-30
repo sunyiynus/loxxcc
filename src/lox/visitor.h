@@ -9,7 +9,7 @@ template<typename DeriveT>
 struct add_create_func {
 public:
     static std::shared_ptr<DeriveT> create() {
-        return std::shared_ptr<DeriveT>();
+        return std::make_shared<DeriveT>();
     }
 };
 
@@ -18,8 +18,8 @@ struct VisitorAbsResult: public add_create_func<VisitorAbsResult> {
     VisitorAbsResult(const VisitorAbsResult& ) = default;
     VisitorAbsResult(VisitorAbsResult&& v) = default;
     using add_create_func<VisitorAbsResult>::create;
-    int type;
     using ptr = std::shared_ptr<VisitorAbsResult>;
+    int type;
     std::string resultStr;
 };
 

@@ -7,7 +7,7 @@ VisitorAbsResult::ptr Printer::visit(BinaryExpr* expr)
     VisitorAbsResult::ptr res = VisitorAbsResult::create();
     auto lRes = expr->lOperand->accept(this);
     auto rRes = expr->rOperand->accept(this);
-    res->resultStr =  lRes->resultStr + " " + expr->op.lexeme + " " + rRes->resultStr;
+    res->resultStr =  lRes->resultStr + " " + expr->op.literal + " " + rRes->resultStr;
     return res;
 }
 
@@ -30,6 +30,6 @@ VisitorAbsResult::ptr Printer::visit(GroupExpr* expr)
 VisitorAbsResult::ptr Printer::visit(LiteralExpr* expr)
 {
     VisitorAbsResult::ptr res = VisitorAbsResult::create();
-    res->resultStr = expr->literal.lexeme;
+    res->resultStr = expr->literal.literal;
     return res;
 }

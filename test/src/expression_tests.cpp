@@ -22,8 +22,8 @@ TEST(PrinterClass_test, testcase_init_001)
     ASSERT_TRUE(binaryA2.get()->lOperand.get() != nullptr);
     ASSERT_TRUE(binaryA2.get()->rOperand.get() != nullptr);
     Printer printer;
-    // auto res = binaryA2->accept(&printer);
-    // ASSERT_EQ(res->resultStr, std::string("10 + 11"));
+    auto res = binaryA2->accept(&printer);
+    ASSERT_EQ(res->resultStr, std::string("10 + 11"));
 }
 
 TEST(ExpressionClass_test, testcase_init_001)
