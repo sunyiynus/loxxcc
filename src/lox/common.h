@@ -45,6 +45,7 @@ struct Token
         token = tk.token;
         return *this;
     }
+    Token& operator=(const Token&) = default;
     std::string literal;
     std::string lexeme;
     std::uint64_t line;
