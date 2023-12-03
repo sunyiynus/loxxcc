@@ -13,8 +13,15 @@ public:
     void parse();
     const Token& current();
     bool atEnd() const ;
+    bool matchTokens(std::initializer_list<TokenType> tktypes);
 
-    AbsExpr::ptr express(); 
+    AbsExpr::ptr expression();
+    AbsExpr::ptr equatity();
+    AbsExpr::ptr comparsion();
+    AbsExpr::ptr term();
+    AbsExpr::ptr factor();
+    AbsExpr::ptr unary();
+    AbsExpr::ptr primary();
 
 private:
     TokensType tokens;
