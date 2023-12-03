@@ -23,7 +23,7 @@ enum class TokenType {
     // keywords
     CLASS, FUNC, NILL, RETURN, PRINT, IF, ELSE, WHILE,
     CONTINUE, BREAK, VAR, THIS,
-    F_EOF,
+    F_EOF, TRUE, FALSE,
 };
 
 
@@ -91,19 +91,23 @@ namespace Keywords
     const std::string Break    = "break";
     const std::string Var      = "var";
     const std::string This     = "this";
+    const std::string True     = "true";
+    const std::string False    = "false";
 
-    const std::map<std::string, TokenType> Table { {Class, TokenType::CLASS},
-                                                    {Func, TokenType::FUNC},
-                                                    {Nil, TokenType::NILL},
-                                                    {Return, TokenType::RETURN},
-                                                    {Print, TokenType::PRINT},
-                                                    {If, TokenType::IF},
-                                                    {Else, TokenType::ELSE},
-                                                    {While, TokenType::WHILE},
-                                                    {Continue, TokenType::CONTINUE},
-                                                    {Break, TokenType::BREAK},
-                                                    {Var, TokenType::VAR},
-                                                    {This, TokenType::THIS},
+    const std::map<std::string, TokenType> Table {  {Class,     TokenType::CLASS},
+                                                    {Func,      TokenType::FUNC},
+                                                    {Nil,       TokenType::NILL},
+                                                    {Return,    TokenType::RETURN},
+                                                    {Print,     TokenType::PRINT},
+                                                    {If,        TokenType::IF},
+                                                    {Else,      TokenType::ELSE},
+                                                    {While,     TokenType::WHILE},
+                                                    {Continue,  TokenType::CONTINUE},
+                                                    {Break,     TokenType::BREAK},
+                                                    {Var,       TokenType::VAR},
+                                                    {This,      TokenType::THIS},
+                                                    {True,      TokenType::TRUE},
+                                                    {False,     TokenType::FALSE},
                                                     };
 
 } // namespace Keywords
