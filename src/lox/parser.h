@@ -34,6 +34,18 @@ public:
         return expr;
     }
 
+    template<AbsExpr::ptr(Parser::*call)()>
+    AbsExpr::ptr binary_expression_reimpl(std::initializer_list<TokenType>& tlist) {
+        auto expr = (this->*call)();
+        while (matchTokens(tlist)) {
+            Token op      = current();
+            auto  rc      = (this->*call)();
+            expr = BinaryExpr::create(expr, op, rc);
+        }
+        return expr;
+    }
+
+
 
 private:
     TokensType tokens;

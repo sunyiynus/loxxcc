@@ -57,8 +57,8 @@ AbsExpr::ptr Parser::term()
 AbsExpr::ptr Parser::factor()
 {
     std::initializer_list<TokenType> matchTk {TokenType::SLASH, TokenType::STAR}; 
-    return this->template binary_expression(std::bind(&Parser::unary, this), matchTk);
-
+    // return this->template binary_expression(std::bind(&Parser::unary, this), matchTk);
+    return this->template binary_expression_reimpl<&Parser::unary>(matchTk);
 }
 AbsExpr::ptr Parser::unary()
 {
