@@ -25,10 +25,10 @@ public:
 
     template<typename FT>
     AbsExpr::ptr binary_expression(FT call, std::initializer_list<TokenType>& tlist) {
-        auto expr = call(this);
+        auto expr = call();
         while (matchTokens(tlist)) {
             Token op      = current();
-            auto  rc      = call(this);
+            auto  rc      = call();
             expr = BinaryExpr::create(expr, op, rc);
         }
         return expr;

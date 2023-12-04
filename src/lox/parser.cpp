@@ -1,5 +1,5 @@
 #include "parser.h"
-
+#include <functional>
 
 
 void Parser::parse() {
@@ -32,51 +32,32 @@ bool Parser::matchTokens(std::initializer_list<TokenType> tktypes)
 
 AbsExpr::ptr Parser::expression()
 {
-
+    return equatity();
 }
+
 AbsExpr::ptr Parser::equatity()
 {
-    auto expr = comparsion();
-    while (matchTokens({TokenType::BANG_EQUAL, TokenType::EQUAL_EQUAL})) {
-        Token op      = current();
-        auto  rc      = comparsion();
-        expr = BinaryExpr::create(expr, Token(), rc);
-    }
-    return expr;
+    std::initializer_list<TokenType> matchTk {TokenType::BANG_EQUAL, TokenType::EQUAL_EQUAL};
+    return this->template binary_expression(std::bind(&Parser::comparsion, this), matchTk);
 }
 
 AbsExpr::ptr Parser::comparsion()
 {
-    auto lc = term();
     std::initializer_list<TokenType> matchTk {TokenType::LESS, TokenType::LESS_EQUAL, 
                                                 TokenType::GREATER, TokenType::GREATER_EQUAL};
-    while(matchTokens(matchTk)) {
-        Token op = current();
-        auto rc = term();
-        lc = BinaryExpr::create(lc, Token(), rc);
-    }
-    return lc;
-
+    return this->template binary_expression(std::bind(&Parser::term, this), matchTk);
 }
+
 AbsExpr::ptr Parser::term()
 {
-    while(true) {
-        auto lc = factor();
-        decltype(lc) rc;
-        Token op;
-        std::initializer_list<TokenType> matchTk {TokenType::PLUS, TokenType::MINUS}; 
-        if (matchTokens(matchTk)) {
-            op = current();
-            rc = factor();
-        }
-        auto binExpr = BinaryExpr::create(lc, Token(), rc);
-    }
-
+    std::initializer_list<TokenType> matchTk {TokenType::PLUS, TokenType::MINUS}; 
+    return this->template binary_expression(std::bind(&Parser::factor, this), matchTk);
 }
+
 AbsExpr::ptr Parser::factor()
 {
     std::initializer_list<TokenType> matchTk {TokenType::SLASH, TokenType::STAR}; 
-    return this->template binary_expression<&unary>(unary, matchTk);
+    return this->template binary_expression(std::bind(&Parser::unary, this), matchTk);
 
 }
 AbsExpr::ptr Parser::unary()
