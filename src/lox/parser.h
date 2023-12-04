@@ -23,6 +23,18 @@ public:
     AbsExpr::ptr unary();
     AbsExpr::ptr primary();
 
+    template<typename FT>
+    AbsExpr::ptr binary_expression(FT call, std::initializer_list<TokenType>& tlist) {
+        auto expr = call(this);
+        while (matchTokens(tlist)) {
+            Token op      = current();
+            auto  rc      = call(this);
+            expr = BinaryExpr::create(expr, op, rc);
+        }
+        return expr;
+    }
+
+
 private:
     TokensType tokens;
     TokensType::iterator curItr;

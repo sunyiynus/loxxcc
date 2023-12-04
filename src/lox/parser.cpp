@@ -3,8 +3,7 @@
 
 
 void Parser::parse() {
-    if ()
-    parse();
+    expression();
 }
 
 const Token& Parser::current()
@@ -21,7 +20,7 @@ bool Parser::matchTokens(std::initializer_list<TokenType> tktypes)
 {
     auto tmpItr = curItr;
     for (auto tktype:tktypes) {
-        if (*tmpItr->token == tktype) {
+        if (tmpItr->token == tktype) {
             continue;
         } else {
             return false;
@@ -33,40 +32,30 @@ bool Parser::matchTokens(std::initializer_list<TokenType> tktypes)
 
 AbsExpr::ptr Parser::expression()
 {
-    while (equatity()) {
-
-    }
 
 }
 AbsExpr::ptr Parser::equatity()
 {
-    while ( true) {
-        auto lc = comparsion();
-        decltype(lc) rc;
-        Token op;
-        if (matchTokens({TokenType::BANG_EQUAL, TokenType::EQUAL_EQUAL})) {
-            op = current();
-            rc = comparsion();
-        }
-        auto binExpr = BinaryExpr::create(lc, Token(), rc);
+    auto expr = comparsion();
+    while (matchTokens({TokenType::BANG_EQUAL, TokenType::EQUAL_EQUAL})) {
+        Token op      = current();
+        auto  rc      = comparsion();
+        expr = BinaryExpr::create(expr, Token(), rc);
     }
-
+    return expr;
 }
 
 AbsExpr::ptr Parser::comparsion()
 {
-    while(true) {
-        auto lc = term();
-        decltype(lc) rc;
-        Token op;
-        std::initializer_list<TokenType> matchTk {TokenType::LESS, TokenType::LESS_EQUAL, 
+    auto lc = term();
+    std::initializer_list<TokenType> matchTk {TokenType::LESS, TokenType::LESS_EQUAL, 
                                                 TokenType::GREATER, TokenType::GREATER_EQUAL};
-        if (matchTokens(matchTk)) {
-            op = current();
-            rc = term();
-        }
-        auto binExpr = BinaryExpr::create(lc, Token(), rc);
+    while(matchTokens(matchTk)) {
+        Token op = current();
+        auto rc = term();
+        lc = BinaryExpr::create(lc, Token(), rc);
     }
+    return lc;
 
 }
 AbsExpr::ptr Parser::term()
@@ -86,17 +75,8 @@ AbsExpr::ptr Parser::term()
 }
 AbsExpr::ptr Parser::factor()
 {
-    while(true) {
-        auto lc = unary();
-        decltype(lc) rc;
-        Token op;
-        std::initializer_list<TokenType> matchTk {TokenType::SLASH, TokenType::STAR}; 
-        if (matchTokens(matchTk)) {
-            op = current();
-            rc = unary();
-        }
-        auto binExpr = BinaryExpr::create(lc, Token(), rc);
-    }
+    std::initializer_list<TokenType> matchTk {TokenType::SLASH, TokenType::STAR}; 
+    return this->template binary_expression<&unary>(unary, matchTk);
 
 }
 AbsExpr::ptr Parser::unary()
@@ -108,12 +88,14 @@ AbsExpr::ptr Parser::unary()
         auto unaryExpr = UnaryExpr::create(op, subExpr);
     } else {
         subExpr = primary();
-        auto unary = LiteralExpr::create();
+        // auto unary = LiteralExpr::create();
     }
+    return subExpr;
 }
+
 AbsExpr::ptr Parser::primary()
 {
-    if (matchTokens({TokenType::NUMBER, TokenType::STRING, TokenType::NILL, 
-                    TokenType::TRUE, TokenType::FALSE}))
+    // if (matchTokens({TokenType::NUMBER, TokenType::STRING, TokenType::NILL, 
+    //                 TokenType::TRUE, TokenType::FALSE}))
 
 }

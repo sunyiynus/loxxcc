@@ -11,6 +11,8 @@ set(SOURCE_FILES
     printer.cpp
     expression.h
     expression.cpp
+    parser.h
+    parser.cpp
 )
 
 add_library(loxcompile SHARED STATIC ${SOURCE_FILES})
