@@ -2,8 +2,8 @@
 #include <functional>
 
 
-void Parser::parse() {
-    expression();
+AbsExpr::ptr Parser::parse() {
+    return expression();
 }
 
 const Token& Parser::current()
@@ -20,7 +20,7 @@ bool Parser::matchTokens(std::initializer_list<TokenType> tktypes)
 {
     auto tmpItr = curItr;
     for (auto tktype:tktypes) {
-        if (tmpItr->token == tktype) {
+        if (!atEnd() && tmpItr->token == tktype) {
             continue;
         } else {
             return false;

@@ -7,10 +7,10 @@
 class Parser {
 public:
 
-    Parser(const TokensType& tk): tokens(tk) {}
+    Parser(const TokensType& tk): tokens(tk), curItr(tokens.begin()) {}
 
     Parser():tokens(), curItr(tokens.begin()) {}
-    void parse();
+    AbsExpr::ptr parse();
     const Token& current();
     bool atEnd() const ;
     bool matchTokens(std::initializer_list<TokenType> tktypes);
