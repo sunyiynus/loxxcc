@@ -29,6 +29,36 @@ bool Parser::matchTokens(std::initializer_list<TokenType> tktypes)
     return true;
 }
 
+void Parser::advance()
+{
+    curItr++;
+}
+
+
+void Parser::synchronize()
+{
+    std::initializer_list<TokenType> matchTk {TokenType::RIGHT_BRACE, 
+                                                TokenType::RIGHT_PAREN,
+                                                TokenType::COMMA};
+    while (!atEnd()) {
+        if (matchTokens(matchTk))
+        {
+            break;
+        }
+        advance();
+    }
+}
+
+
+void Parser::consume(std::initializer_list<TokenType> tktypes)
+{
+    if (matchTokens(tktypes)) {
+        return;
+    }
+
+    // error
+
+}
 
 AbsExpr::ptr Parser::expression()
 {
@@ -38,45 +68,57 @@ AbsExpr::ptr Parser::expression()
 AbsExpr::ptr Parser::equatity()
 {
     std::initializer_list<TokenType> matchTk {TokenType::BANG_EQUAL, TokenType::EQUAL_EQUAL};
-    return this->template binary_expression(std::bind(&Parser::comparsion, this), matchTk);
+    return this->template binary_expression_reimpl<&Parser::comparsion>(matchTk);
 }
 
 AbsExpr::ptr Parser::comparsion()
 {
     std::initializer_list<TokenType> matchTk {TokenType::LESS, TokenType::LESS_EQUAL, 
                                                 TokenType::GREATER, TokenType::GREATER_EQUAL};
-    return this->template binary_expression(std::bind(&Parser::term, this), matchTk);
+    return this->template binary_expression_reimpl<&Parser::term>(matchTk);
 }
 
 AbsExpr::ptr Parser::term()
 {
     std::initializer_list<TokenType> matchTk {TokenType::PLUS, TokenType::MINUS}; 
-    return this->template binary_expression(std::bind(&Parser::factor, this), matchTk);
+    return this->template binary_expression_reimpl<&Parser::factor>(matchTk);
 }
 
 AbsExpr::ptr Parser::factor()
 {
     std::initializer_list<TokenType> matchTk {TokenType::SLASH, TokenType::STAR}; 
-    // return this->template binary_expression(std::bind(&Parser::unary, this), matchTk);
     return this->template binary_expression_reimpl<&Parser::unary>(matchTk);
 }
 AbsExpr::ptr Parser::unary()
 {
     AbsExpr::ptr subExpr;
     if (matchTokens({TokenType::MINUS, TokenType::BANG})) {
-        Token op = current();
+        auto op = current();
+        advance();
         subExpr = primary();
-        auto unaryExpr = UnaryExpr::create(op, subExpr);
+        subExpr = UnaryExpr::create(op, subExpr);
     } else {
         subExpr = primary();
-        // auto unary = LiteralExpr::create();
     }
     return subExpr;
 }
 
 AbsExpr::ptr Parser::primary()
 {
-    // if (matchTokens({TokenType::NUMBER, TokenType::STRING, TokenType::NILL, 
-    //                 TokenType::TRUE, TokenType::FALSE}))
+    if (matchTokens({TokenType::NUMBER, TokenType::STRING})) {
+         auto res = LiteralExpr::create(current());
+         advance();
+         return res;
+    }
+
+    if (matchTokens({TokenType::LEFT_BRACE})) {
+        advance();
+        auto expr = expression();
+        consume({TokenType::RIGHT_BRACE});
+        auto res = GroupExpr::create(expr);
+        advance();
+        return res;
+    }
+
 
 }

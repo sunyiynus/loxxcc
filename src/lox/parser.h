@@ -14,6 +14,10 @@ public:
     const Token& current();
     bool atEnd() const ;
     bool matchTokens(std::initializer_list<TokenType> tktypes);
+    void advance();
+    void synchronize();
+    void consume(std::initializer_list<TokenType> tktypes);
+    void error();
 
     AbsExpr::ptr expression();
     AbsExpr::ptr equatity();
@@ -23,25 +27,16 @@ public:
     AbsExpr::ptr unary();
     AbsExpr::ptr primary();
 
-    template<typename FT>
-    AbsExpr::ptr binary_expression(FT call, std::initializer_list<TokenType>& tlist) {
-        auto expr = call();
-        while (matchTokens(tlist)) {
-            Token op      = current();
-            auto  rc      = call();
-            expr = BinaryExpr::create(expr, op, rc);
-        }
-        return expr;
-    }
-
     template<AbsExpr::ptr(Parser::*call)()>
     AbsExpr::ptr binary_expression_reimpl(std::initializer_list<TokenType>& tlist) {
         auto expr = (this->*call)();
         while (matchTokens(tlist)) {
-            Token op      = current();
-            auto  rc      = (this->*call)();
-            expr = BinaryExpr::create(expr, op, rc);
+            Token op = current();
+            advance();
+            auto rc   = (this->*call)();
+                 expr = BinaryExpr::create(expr, op, rc);
         }
+        advance();
         return expr;
     }
 
