@@ -34,9 +34,9 @@ public:
             Token op = current();
             advance();
             auto rc   = (this->*call)();
-                 expr = BinaryExpr::create(expr, op, rc);
+            expr = BinaryExpr::create(expr, op, rc);
         }
-        advance();
+                                // advance();
         return expr;
     }
 

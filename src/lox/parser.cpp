@@ -21,12 +21,10 @@ bool Parser::matchTokens(std::initializer_list<TokenType> tktypes)
     auto tmpItr = curItr;
     for (auto tktype:tktypes) {
         if (!atEnd() && tmpItr->token == tktype) {
-            continue;
-        } else {
-            return false;
+            return true;
         }
     }
-    return true;
+    return false;
 }
 
 void Parser::advance()
@@ -105,7 +103,7 @@ AbsExpr::ptr Parser::unary()
 
 AbsExpr::ptr Parser::primary()
 {
-    if (matchTokens({TokenType::NUMBER, TokenType::STRING})) {
+    if (matchTokens({TokenType::NUMBER, TokenType::STRING, TokenType::IDENTIFIER})) {
          auto res = LiteralExpr::create(current());
          advance();
          return res;
