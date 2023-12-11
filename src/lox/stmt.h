@@ -21,6 +21,7 @@ public:
 
     }
 public: 
+    using VisitableStmt<PrintStmt>::accept;
 
 
 };
@@ -30,6 +31,9 @@ public:
     static ptr create() {
 
     }
+public: 
+    using VisitableStmt<ExprStmt>::accept;
+
 };
 
 #endif
