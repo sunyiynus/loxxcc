@@ -3,7 +3,7 @@
 #include "expression.h"
 #include "stmt.h"
 
-class Printer : public AstPrinter {
+class Printer : public AstVisitor {
 public:
     Printer() = default;
     VisitorAbsResult::ptr visit(BinaryExpr* expr) override;

@@ -7,11 +7,11 @@
 class AbsStmt {
 public:
     using ptr = std::shared_ptr<AbsStmt>;
-    virtual VisitorAbsResult::ptr accept(AstPrinter* visitor) = 0;
+    virtual VisitorAbsResult::ptr accept(AstVisitor* visitor) = 0;
 };
 
 
-template<typename DerivedT, typename PT = AbsStmt, typename VT = AstPrinter>
+template<typename DerivedT, typename PT = AbsStmt, typename VT = AstVisitor>
 using VisitableStmt = Visitable<DerivedT, PT, VT>;
 
 
@@ -33,3 +33,5 @@ public:
 };
 
 #endif
+
+

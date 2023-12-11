@@ -10,10 +10,10 @@ class GroupExpr;
 class LiteralExpr;
 class PrintStmt;
 class ExprStmt;
-using AstPrinter = Visitor<BinaryExpr, UnaryExpr, GroupExpr, LiteralExpr, \
+using AstVisitor = Visitor<BinaryExpr, UnaryExpr, GroupExpr, LiteralExpr, \
                             PrintStmt, ExprStmt>;
 
-using ExprVisitor = AstPrinter;
+using ExprVisitor = AstVisitor;
 
 using InterpreteVisitor = Visitor<BinaryExpr, UnaryExpr, GroupExpr, LiteralExpr, \
                             PrintStmt, ExprStmt>;
