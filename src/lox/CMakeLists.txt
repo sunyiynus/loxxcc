@@ -13,6 +13,10 @@ set(SOURCE_FILES
     expression.cpp
     parser.h
     parser.cpp
+    evaluator.h
+    evaluator.cpp
+    stmt.h
+    stmt.cpp
 )
 
 add_library(loxcompile SHARED STATIC ${SOURCE_FILES})

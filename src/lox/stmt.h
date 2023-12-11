@@ -14,4 +14,22 @@ public:
 template<typename DerivedT, typename PT = AbsStmt, typename VT = AstPrinter>
 using VisitableStmt = Visitable<DerivedT, PT, VT>;
 
+
+class PrintStmt : VisitableStmt<PrintStmt> {
+public: 
+    static ptr create() {
+
+    }
+public: 
+
+
+};
+
+class ExprStmt : VisitableStmt<ExprStmt> {
+public: 
+    static ptr create() {
+
+    }
+};
+
 #endif

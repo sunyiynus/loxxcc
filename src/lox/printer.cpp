@@ -33,3 +33,13 @@ VisitorAbsResult::ptr Printer::visit(LiteralExpr* expr)
     res->resultStr = expr->literal.literal;
     return res;
 }
+VisitorAbsResult::ptr Printer::visit(PrintStmt* expr)
+{
+    VisitorAbsResult::ptr res = VisitorAbsResult::create();
+    return res;
+}
+VisitorAbsResult::ptr Printer::visit(ExprStmt* expr)
+{
+    VisitorAbsResult::ptr res = VisitorAbsResult::create();
+    return res;
+}
