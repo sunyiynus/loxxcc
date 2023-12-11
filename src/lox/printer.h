@@ -2,7 +2,7 @@
 #define PRINTER_H
 #include "expression.h"
 
-class Printer : public ExprVisitor {
+class Printer : public AstPrinter {
 public:
     Printer() = default;
     VisitorAbsResult::ptr visit(BinaryExpr* expr) override;

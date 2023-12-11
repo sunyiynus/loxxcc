@@ -43,5 +43,13 @@ public:
     
 };
 
+template <typename DeriveT, typename PT, typename VT>
+class Visitable : public PT {
+public:
+    VisitorAbsResult::ptr accept(VT* visitor) {
+        return visitor->visit(static_cast<DeriveT*>(this));
+    }
+};
+
 
 #endif // VISITOR_H

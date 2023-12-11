@@ -36,7 +36,6 @@ public:
             auto rc   = (this->*call)();
             expr = BinaryExpr::create(expr, op, rc);
         }
-                                // advance();
         return expr;
     }
 

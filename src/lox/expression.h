@@ -5,12 +5,8 @@
 #include <string>
 #include "common.h"
 #include "visitor.h"
+#include "visitor_instance.h"
 
-class BinaryExpr;
-class UnaryExpr;
-class GroupExpr;
-class LiteralExpr;
-using ExprVisitor  = Visitor<BinaryExpr, UnaryExpr, GroupExpr, LiteralExpr>;
 
 
 class AbsExpr {
@@ -20,14 +16,8 @@ public:
 private:
 };
 
-
-template <typename DeriveT>
-class VisitableExpr : public AbsExpr {
-public:
-    VisitorAbsResult::ptr accept(ExprVisitor* visitor) {
-        return visitor->visit(static_cast<DeriveT*>(this));
-    }
-};
+template<typename DeriveT, typename PT = AbsExpr, typename VT = ExprVisitor>
+using VisitableExpr = Visitable<DeriveT, PT, VT>;
 
 
 

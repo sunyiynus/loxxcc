@@ -19,3 +19,5 @@ target_link_libraries(divider_tests gtest loxcompile)
 install(TARGETS divider_tests DESTINATION bin)
 
 configure_file(src/config.h.in ${CMAKE_SOURCE_DIR}/test/src/config.h)
+enable_testing()
+add_test(TEST all_test COMMOND divider_tests)
