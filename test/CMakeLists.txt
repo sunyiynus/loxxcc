@@ -12,6 +12,7 @@ set(SOURCE_FILES main.cpp
                  src/divider_tests.cpp
                  src/expression_tests.cpp
                  src/parser_tests.cpp
+                 src/variant_tests.cpp
                  src/scanner_tests.cpp)
 
 add_executable(divider_tests ${SOURCE_FILES})
