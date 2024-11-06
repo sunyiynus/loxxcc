@@ -11,7 +11,7 @@ public:
     virtual ~BaseVariant() = default;
     virtual const std::type_info& getType() const  = 0;
     virtual void print() const = 0;
-    virtual BaseVariant clone() = 0;
+    virtual BaseVariant* clone() = 0;
 };
 
 template <typename T>
@@ -24,9 +24,8 @@ public:
         return typeid(T);
     }
 
-    VariantStorage clone() {
-        VariantStorage tmp(*this);
-        return tmp;
+    BaseVariant* clone() override {
+        return new VariantStorage<std::decay_t<T>>(*this);
     }
 
     void print() const override {
@@ -39,6 +38,8 @@ class Variant {
 private:
     BaseVariant* storage;
 public:
+    Variant(): storage(nullptr) {}
+
     template <typename T>
     Variant(T&& val) : storage(new VariantStorage<std::decay_t<T>>(std::forward<T>(val))) {}
     ~Variant() {

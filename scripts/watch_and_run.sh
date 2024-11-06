@@ -6,6 +6,7 @@ WATCH_DIR="./../src ./../test"
 # 定义你的 make 命令和 run 命令
 MAKE_CMD="cmake --build ./../build"
 RUN_CMD="./../bin/divider_tests"  # 替换成你的运行命令
+RUN_CMD1="./../bin/loxxcc"  # 替换成你的运行命令
 
 echo "Watching for changes in $WATCH_DIR..."
 
@@ -21,6 +22,7 @@ while true; do
     # 如果 make 成功，执行 run 命令
     if [ $? -eq 0 ]; then
         echo "Running program..."
+        $RUN_CMD1
         $RUN_CMD
     else
         echo "Make failed, skipping run."
