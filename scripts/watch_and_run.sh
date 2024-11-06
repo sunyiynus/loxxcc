@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # 定义要监视的目录，这里假设是当前目录
-WATCH_DIR="./.."
+WATCH_DIR="./../src ./../test"
 
 # 定义你的 make 命令和 run 命令
-MAKE_CMD="cmake --build ."
-RUN_CMD="./my_program"  # 替换成你的运行命令
+MAKE_CMD="cmake --build ./../build"
+RUN_CMD="./../bin/divider_tests"  # 替换成你的运行命令
 
 echo "Watching for changes in $WATCH_DIR..."
 
