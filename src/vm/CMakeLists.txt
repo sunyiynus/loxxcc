@@ -9,5 +9,7 @@ set(SOURCE_FILES
 add_library(vm SHARED STATIC ${SOURCE_FILES})
 add_executable(vmrun vm.cpp)
 
-install(TARGETS vm DESTINATION ${LOXXCC_INSTALL_LIB_DIR})
-install(FILES vm.h DESTINATION ${LOXXCC_INSTALL_INCLUDE_DIR})
+# 设置目标的输出目录到 bin 目录
+set_target_properties(vmrun PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${LOXXCC_INSTALL_BIN_DIR}
+)

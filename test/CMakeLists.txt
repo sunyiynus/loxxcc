@@ -6,6 +6,7 @@ project(divider_tests)
 include_directories(${LOXXCC_HEADERS_DIR})
 include_directories(${LOXXCC_INSTALL_INCLUDE_DIR})
 
+configure_file(src/config.h.in ${CMAKE_SOURCE_DIR}/test/src/config.h)
 set(SOURCE_FILES main.cpp 
                  src/divider_tests.cpp
                  src/expression_tests.cpp
@@ -18,8 +19,11 @@ target_link_libraries(divider_tests gtest loxcompile)
 target_include_directories(divider_tests PRIVATE
     ${CMAKE_SOURCE_DIR}/extern/googletest/googletest/include
 )
-install(TARGETS divider_tests DESTINATION bin)
 
-configure_file(src/config.h.in ${CMAKE_SOURCE_DIR}/test/src/config.h)
+# 设置目标的输出目录到 bin 目录
+set_target_properties(divider_tests PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${LOXXCC_INSTALL_BIN_DIR}
+)
+
 enable_testing()
 add_test(TEST all_test COMMOND divider_tests)

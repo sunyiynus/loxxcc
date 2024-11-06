@@ -21,5 +21,10 @@ set(SOURCE_FILES
 
 add_library(loxcompile SHARED STATIC ${SOURCE_FILES})
 add_executable(loxcompiler compiler.cpp)
-install(TARGETS loxcompile DESTINATION ${LOXXCC_INSTALL_LIB_DIR})
-install(FILES compiler.h DESTINATION ${LOXXCC_INSTALL_INCLUDE_DIR})
+
+
+
+# 设置目标的输出目录到 bin 目录
+set_target_properties(loxcompiler PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${LOXXCC_INSTALL_BIN_DIR}
+)
