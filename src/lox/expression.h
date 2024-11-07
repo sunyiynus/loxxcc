@@ -81,4 +81,19 @@ public:
 }; 
 
 
+class AssignExpr : public VisitableExpr<AssignExpr> {
+public:
+    static ptr create(const Token& rp, AbsExpr::ptr expr) {
+        auto res     = std::make_shared<AssignExpr>();
+        res->literal = rp;
+        res->expression = expr;
+        return res;
+    }
+public:
+    AssignExpr() = default;
+    Token literal;
+    AbsExpr::ptr expression;
+}; 
+
+
 #endif // EXPRESSION_H

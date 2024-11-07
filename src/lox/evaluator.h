@@ -9,8 +9,10 @@ public:
     VisitorAbsResult::ptr visit(UnaryExpr* expr) override;
     VisitorAbsResult::ptr visit(GroupExpr* expr) override;
     VisitorAbsResult::ptr visit(LiteralExpr* expr) override;
+    VisitorAbsResult::ptr visit(AssignExpr* expr) override;
     VisitorAbsResult::ptr visit(PrintStmt* expr) override;
     VisitorAbsResult::ptr visit(ExprStmt* expr) override;
+    VisitorAbsResult::ptr visit(DeclStmt* expr) override;
 };
 
 

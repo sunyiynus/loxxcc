@@ -1,9 +1,17 @@
 #include "parser.h"
 #include <functional>
+#include <list>
+#include "errors.h"
 
 
 AbsExpr::ptr Parser::parse() {
-    return expression();
+    std::list<AbsStmt::ptr> stmts;
+
+    while (!atEnd()) {
+        if (matchTokens({TokenType::VAR})) {
+            stmts.push_back(declStmt());
+        }
+    }
 }
 
 const Token& Parser::current()
@@ -60,6 +68,10 @@ void Parser::consume(std::initializer_list<TokenType> tktypes)
 
 AbsExpr::ptr Parser::expression()
 {
+    if (matchTokens({TokenType::IDENTIFIER})) {
+        return assignExpr();
+    }
+
     return equatity();
 }
 
@@ -117,6 +129,44 @@ AbsExpr::ptr Parser::primary()
         advance();
         return res;
     }
+    bad_grammar bg("error at ");
+    throw bg;
+    return nullptr;
+}
 
+AbsExpr::ptr Parser::assignExpr() 
+{
+    Token tk = current();
+    consume({TokenType::EQUAL});
+    AbsExpr::ptr expr = expression();
+    return AssignExpr::create(tk, expr);
+}
+
+
+AbsStmt::ptr Parser::declStmt()
+{
+    Token tk = current();
+    consume({TokenType::EQUAL});
+    AbsExpr::ptr expr = expression();
+    return DeclStmt::create(tk, expr);
+}
+
+AbsStmt::ptr Parser::exprStmt()
+{
+    AbsExpr::ptr expr = expression();
+    return ExprStmt::create(expr);
+}
+
+AbsStmt::ptr Parser::printStmt()
+{
+    consume({TokenType::PRINT});
+    AbsExpr::ptr expr = expression();
+    return PrintStmt::create(expr);
 
 }
+
+AbsStmt::ptr Parser::blockStmt() {
+
+}
+
+

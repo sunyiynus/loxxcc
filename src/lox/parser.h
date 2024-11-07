@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "expression.h"
+#include "stmt.h"
 
 class Parser {
 public:
@@ -26,6 +27,10 @@ public:
     AbsExpr::ptr factor();
     AbsExpr::ptr unary();
     AbsExpr::ptr primary();
+    AbsExpr::ptr assignExpr();
+    AbsStmt::ptr declStmt();
+    AbsStmt::ptr printStmt();
+    AbsStmt::ptr exprStmt();
 
     template<AbsExpr::ptr(Parser::*call)()>
     AbsExpr::ptr binary_expression_reimpl(std::initializer_list<TokenType>& tlist) {

@@ -3,7 +3,7 @@
 
 #include <string>
 #include <memory>
-#include 
+#include "any.h"
 
 
 template<typename DeriveT>
@@ -22,6 +22,8 @@ struct VisitorAbsResult: public add_create_func<VisitorAbsResult> {
     using ptr = std::shared_ptr<VisitorAbsResult>;
     int type;
     std::string resultStr;
+    Any value;
+
 };
 
 

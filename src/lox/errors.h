@@ -32,7 +32,19 @@ private:
     Error() = default;
 };
 
+class bad_grammar: public std::exception {
+public:
+    // 构造函数，接收错误消息
+    explicit bad_grammar(const std::string& message) : message_(message) {}
 
+    // 重写 what() 函数，返回错误消息
+    const char* what() const noexcept override {
+        return message_.c_str();
+    }
+
+private:
+    std::string message_; // 错误消息的存储
+};
 
 
 #endif // ERRORS_H
