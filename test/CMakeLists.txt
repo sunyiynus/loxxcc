@@ -6,7 +6,6 @@ project(divider_tests)
 include_directories(${LOXXCC_HEADERS_DIR})
 include_directories(${LOXXCC_INSTALL_INCLUDE_DIR})
 
-configure_file(src/config.h.in ${CMAKE_SOURCE_DIR}/test/src/config.h)
 set(SOURCE_FILES main.cpp 
                  src/divider_tests.cpp
                  src/expression_tests.cpp

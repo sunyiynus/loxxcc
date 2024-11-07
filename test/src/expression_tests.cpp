@@ -38,3 +38,10 @@ TEST(ExpressionClass_test, testcase_init_001)
     binaryA2->rOperand = literalA2;
     ASSERT_TRUE(binaryA2.get() != nullptr);
 }
+
+TEST(ExpressionClass_test, testcase_init_002)
+{
+    auto res = Utility::PathJoin({g_loxSourceDir, "test", "lox"});
+    std::string expect_res = g_loxSourceDir + "/test/lox";
+    EXPECT_EQ(res, expect_res);
+}

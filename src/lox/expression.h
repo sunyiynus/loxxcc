@@ -51,7 +51,7 @@ public:
     Token op;
     AbsExpr::ptr rOperand;
 
-}; 
+};
 
 
 class GroupExpr : public VisitableExpr<GroupExpr> {

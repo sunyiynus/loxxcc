@@ -1,9 +1,0 @@
-#ifndef CONFIG_H
-#define CONFIG_H
-
-#include <string>
-
-#define TEST_LOX_SOURCE_DIR "${CMAKE_SOURCE_DIR}"
-
-const std::string g_loxSourceDir = TEST_LOX_SOURCE_DIR;
-#endif

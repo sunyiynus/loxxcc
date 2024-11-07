@@ -16,14 +16,13 @@ using VisitableStmt = Visitable<DerivedT, PT, VT>;
 
 
 class PrintStmt : VisitableStmt<PrintStmt> {
-public: 
-    static ptr create() {
+public:
+    template <typename ...Args>
+    static ptr create(Args...) {
 
     }
 public: 
     using VisitableStmt<PrintStmt>::accept;
-
-
 };
 
 class ExprStmt : VisitableStmt<ExprStmt> {

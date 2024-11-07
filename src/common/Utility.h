@@ -8,7 +8,7 @@
 
 namespace Utility {
 
-inline std::string ReadFile(const std::string filepath)
+inline static std::string ReadFile(const std::string filepath)
 {
     std::ifstream fs(filepath);
     if (fs.is_open()) {
@@ -20,7 +20,7 @@ inline std::string ReadFile(const std::string filepath)
 }
 
 
-inline std::string ReadFile(const char* filepath)
+inline static std::string ReadFile(const char* filepath)
 {
     std::string filepathstring (filepath);
     return ReadFile(filepathstring);
@@ -32,11 +32,16 @@ inline std::string PathJoin(std::list<std::string> pathVec)
     std::string res = pathVec.front();
     pathVec.pop_front();
     for (const auto & path: pathVec) {
+#ifdef _WIN32
+        res += "\\";
+#elif defined(__linux__) || (defined(__APPLE__) && defined(__MACH__))
         res += "/";
+#endif
         res += path;
     }
     return  res;
 }
+
 
 template<typename T>
 std::ostream& print(std::ostream &out, T const &val) { 
