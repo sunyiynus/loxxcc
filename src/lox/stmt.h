@@ -60,6 +60,24 @@ public:
 
 };
 
-#endif
+class BlockStmt : VisitableStmt<BlockStmt> {
+public: 
+    static ptr create(std::list<AbsStmt::ptr> stmts) {
+        auto res = std::make_shared<BlockStmt>();
+        res->stmts = stmts;
+        return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
+    }
+public:
+    std::list<AbsStmt::ptr> stmts;
+
+public: 
+    using VisitableStmt<BlockStmt>::accept;
+
+};
+
+
+
+
+#endif // STMT_H
 
 

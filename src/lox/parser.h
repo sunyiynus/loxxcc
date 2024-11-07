@@ -31,6 +31,8 @@ public:
     AbsStmt::ptr declStmt();
     AbsStmt::ptr printStmt();
     AbsStmt::ptr exprStmt();
+    AbsStmt::ptr declaration();
+    AbsStmt::ptr blockStmt();
 
     template<AbsExpr::ptr(Parser::*call)()>
     AbsExpr::ptr binary_expression_reimpl(std::initializer_list<TokenType>& tlist) {

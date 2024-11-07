@@ -8,9 +8,7 @@ AbsExpr::ptr Parser::parse() {
     std::list<AbsStmt::ptr> stmts;
 
     while (!atEnd()) {
-        if (matchTokens({TokenType::VAR})) {
-            stmts.push_back(declStmt());
-        }
+        stmts.push_back(declaration());
     }
 }
 
@@ -165,8 +163,28 @@ AbsStmt::ptr Parser::printStmt()
 
 }
 
-AbsStmt::ptr Parser::blockStmt() {
-
+AbsStmt::ptr Parser::blockStmt()
+{
+    consume({TokenType::LEFT_BRACE});
+    std::list<AbsStmt::ptr> stmts = declaration();
+    consume({TokenType::RIGHT_BRACE});
+    return  BlockStmt::create(stmts);
 }
 
+AbsStmt::ptr Parser::declaration()
+{
+    if (matchTokens({TokenType::VAR})) {
+        return declStmt();
+    }
+
+    if (matchTokens({TokenType::PRINT})) {
+        return printStmt();
+    }
+
+    if (matchTokens({TokenType::LEFT_BRACE})) {
+        return blockStmt();
+    }
+    return exprStmt();
+
+}
 
