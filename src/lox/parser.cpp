@@ -168,7 +168,7 @@ AbsStmt::ptr Parser::blockStmt()
     consume({TokenType::LEFT_BRACE});
     std::list<AbsStmt::ptr> stmts = declaration();
     consume({TokenType::RIGHT_BRACE});
-    return  BlockStmt::create(stmts);
+    return BlockStmt::create(stmts);
 }
 
 AbsStmt::ptr Parser::declaration()

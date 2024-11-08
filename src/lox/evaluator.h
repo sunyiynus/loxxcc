@@ -2,17 +2,31 @@
 #define EVALUATOR_H
 #include "visitor_instance.h"
 
+
+
+class Environment {
+public:
+    Environment(std::shared_ptr<Environment> parent): parentEnv(parent) {}
+    AnyResult::ptr get(const std::string& key);
+    void set(const std::string& key, AnyResult::ptr value);
+private:
+    std::map<std::string, Any> symbols;
+    std::shared_ptr<Environment> parentEnv;
+};
+
 class Interpreter: public InterpreteVisitor {
+private:
+
 public: 
     Interpreter() = default;
-    VisitorAbsResult::ptr visit(BinaryExpr* expr) override;
-    VisitorAbsResult::ptr visit(UnaryExpr* expr) override;
-    VisitorAbsResult::ptr visit(GroupExpr* expr) override;
-    VisitorAbsResult::ptr visit(LiteralExpr* expr) override;
-    VisitorAbsResult::ptr visit(AssignExpr* expr) override;
-    VisitorAbsResult::ptr visit(PrintStmt* expr) override;
-    VisitorAbsResult::ptr visit(ExprStmt* expr) override;
-    VisitorAbsResult::ptr visit(DeclStmt* expr) override;
+    AnyResult::ptr visit(BinaryExpr* expr) override;
+    AnyResult::ptr visit(UnaryExpr* expr) override;
+    AnyResult::ptr visit(GroupExpr* expr) override;
+    AnyResult::ptr visit(LiteralExpr* expr) override;
+    AnyResult::ptr visit(AssignExpr* expr) override;
+    AnyResult::ptr visit(PrintStmt* expr) override;
+    AnyResult::ptr visit(ExprStmt* expr) override;
+    AnyResult::ptr visit(DeclStmt* expr) override;
 };
 
 

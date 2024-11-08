@@ -6,12 +6,12 @@
 class Printer : public AstVisitor {
 public:
     Printer() = default;
-    VisitorAbsResult::ptr visit(BinaryExpr* expr) override;
-    VisitorAbsResult::ptr visit(UnaryExpr* expr) override;
-    VisitorAbsResult::ptr visit(GroupExpr* expr) override;
-    VisitorAbsResult::ptr visit(LiteralExpr* expr) override;
-    VisitorAbsResult::ptr visit(PrintStmt* expr) override;
-    VisitorAbsResult::ptr visit(ExprStmt* expr) override;
+    AnyResult::ptr visit(BinaryExpr* expr) override;
+    AnyResult::ptr visit(UnaryExpr* expr) override;
+    AnyResult::ptr visit(GroupExpr* expr) override;
+    AnyResult::ptr visit(LiteralExpr* expr) override;
+    AnyResult::ptr visit(PrintStmt* expr) override;
+    AnyResult::ptr visit(ExprStmt* expr) override;
 
 };
 

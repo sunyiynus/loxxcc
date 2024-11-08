@@ -12,7 +12,7 @@
 class AbsExpr {
 public:
     using ptr = std::shared_ptr<AbsExpr>;
-    virtual VisitorAbsResult::ptr accept(ExprVisitor* visitor) = 0;
+    virtual AnyResult::ptr accept(ExprVisitor* visitor) = 0;
 private:
 };
 

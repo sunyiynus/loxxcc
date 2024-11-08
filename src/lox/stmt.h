@@ -7,7 +7,7 @@
 class AbsStmt {
 public:
     using ptr = std::shared_ptr<AbsStmt>;
-    virtual VisitorAbsResult::ptr accept(AstVisitor* visitor) = 0;
+    virtual AnyResult::ptr accept(AstVisitor* visitor) = 0;
 };
 
 

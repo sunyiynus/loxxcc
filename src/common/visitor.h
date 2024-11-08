@@ -14,13 +14,18 @@ public:
     }
 };
 
-struct VisitorAbsResult: public add_create_func<VisitorAbsResult> {
-    VisitorAbsResult() = default;
-    VisitorAbsResult(const VisitorAbsResult& ) = default;
-    VisitorAbsResult(VisitorAbsResult&& v) = default;
-    using add_create_func<VisitorAbsResult>::create;
-    using ptr = std::shared_ptr<VisitorAbsResult>;
-    int type;
+
+enum class prim_type {
+    Number, LongInt, String
+};
+
+struct AnyResult: public add_create_func<AnyResult> {
+    AnyResult() = default;
+    AnyResult(const AnyResult& ) = default;
+    AnyResult(AnyResult&& v) = default;
+    using add_create_func<AnyResult>::create;
+    using ptr = std::shared_ptr<AnyResult>;
+    prim_type type;
     std::string resultStr;
     Any value;
 
@@ -34,7 +39,7 @@ class Visitor;
 template <typename T>
 class Visitor<T> {
 public:
-    virtual VisitorAbsResult::ptr visit(T* expr) = 0;
+    virtual AnyResult::ptr visit(T* expr) = 0;
 };
 
 
@@ -42,14 +47,14 @@ template <typename T, typename ... Args>
 class Visitor<T, Args...>: public Visitor<Args...> {
 public:
     using Visitor<Args...>::visit;
-    virtual VisitorAbsResult::ptr visit(T* expr) = 0;
+    virtual AnyResult::ptr visit(T* expr) = 0;
     
 };
 
 template <typename DeriveT, typename PT, typename VT>
 class Visitable : public PT {
 public:
-    VisitorAbsResult::ptr accept(VT* visitor) {
+    AnyResult::ptr accept(VT* visitor) {
         return visitor->visit(static_cast<DeriveT*>(this));
     }
 };

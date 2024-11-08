@@ -2,44 +2,44 @@
 #include <memory>
 
 
-VisitorAbsResult::ptr Printer::visit(BinaryExpr* expr)
+AnyResult::ptr Printer::visit(BinaryExpr* expr)
 {
-    VisitorAbsResult::ptr res = VisitorAbsResult::create();
+    AnyResult::ptr res = AnyResult::create();
     auto lRes = expr->lOperand->accept(this);
     auto rRes = expr->rOperand->accept(this);
     res->resultStr =  lRes->resultStr + " " + expr->op.literal + " " + rRes->resultStr;
     return res;
 }
 
-VisitorAbsResult::ptr Printer::visit(UnaryExpr* expr)
+AnyResult::ptr Printer::visit(UnaryExpr* expr)
 {
-    VisitorAbsResult::ptr res = VisitorAbsResult::create();
+    AnyResult::ptr res = AnyResult::create();
     auto rRes = expr->rOperand->accept(this);
     res->resultStr = expr->op.lexeme + " " + rRes->resultStr;
     return res;
 }
 
-VisitorAbsResult::ptr Printer::visit(GroupExpr* expr)
+AnyResult::ptr Printer::visit(GroupExpr* expr)
 {
-    VisitorAbsResult::ptr res = VisitorAbsResult::create();
+    AnyResult::ptr res = AnyResult::create();
     auto sRes = expr->subExpr->accept(this);
     res->resultStr =  "( " + sRes->resultStr + " )";
     return res;
 }
 
-VisitorAbsResult::ptr Printer::visit(LiteralExpr* expr)
+AnyResult::ptr Printer::visit(LiteralExpr* expr)
 {
-    VisitorAbsResult::ptr res = VisitorAbsResult::create();
+    AnyResult::ptr res = AnyResult::create();
     res->resultStr = expr->literal.literal;
     return res;
 }
-VisitorAbsResult::ptr Printer::visit(PrintStmt* expr)
+AnyResult::ptr Printer::visit(PrintStmt* expr)
 {
-    VisitorAbsResult::ptr res = VisitorAbsResult::create();
+    AnyResult::ptr res = AnyResult::create();
     return res;
 }
-VisitorAbsResult::ptr Printer::visit(ExprStmt* expr)
+AnyResult::ptr Printer::visit(ExprStmt* expr)
 {
-    VisitorAbsResult::ptr res = VisitorAbsResult::create();
+    AnyResult::ptr res = AnyResult::create();
     return res;
 }

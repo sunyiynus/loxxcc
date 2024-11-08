@@ -1,60 +1,102 @@
 #include "evaluator.h"
 #include <memory>
+#include "types.h"
 #include "visitor_instance.h"
 #include "expression.h"
 
 
 
-VisitorAbsResult::ptr Interpreter::visit(BinaryExpr* expr)
+
+
+AnyResult::ptr Interpreter::visit(BinaryExpr* expr)
 {
-    VisitorAbsResult::ptr l_res = expr->lOperand->accept(this);
-    VisitorAbsResult::ptr r_res = expr->lOperand->accept(this);
+    AnyResult::ptr l_res = expr->lOperand->accept(this);
+    AnyResult::ptr r_res = expr->lOperand->accept(this);
     if (expr->op.token == TokenType::PLUS) {
-        l_res->value.get();
     }
 
-    VisitorAbsResult::ptr res;
+
+    if (l_res->type == prim_type::String) {
+        try {
+            number res = std::stold(l_res->value.get<std::string>());
+        } catch (const std::exception& e) {
+            
+        }
+    }
+
+    if (r_res->type == prim_type::String) {
+        
+    }
+
+    AnyResult::ptr res;
     return res;
 }
 
-VisitorAbsResult::ptr Interpreter::visit(UnaryExpr* expr)
+AnyResult::ptr Interpreter::visit(UnaryExpr* expr)
 {
-    VisitorAbsResult::ptr res = VisitorAbsResult::create();
+    AnyResult::ptr res = AnyResult::create();
+    AnyResult::ptr res_oprd = expr->rOperand->accept(this);
+    if (res_oprd->type == prim_type::String) {
+        number val = 0;
+        try {
+            val = std::stold(res_oprd->value.get<std::string>());
+        } catch (const std::exception& e) {
+            // TODO Throw expcetion
+        }
+        res->value = Any(-(val));
+        res->type = prim_type::Number;
+    } else if (res_oprd->type == prim_type::Number) {
+        res->value = Any(-res_oprd->value.get<number>());
+    }
     return res;
 }
 
-VisitorAbsResult::ptr Interpreter::visit(GroupExpr* expr)
+AnyResult::ptr Interpreter::visit(GroupExpr* expr)
 {
-    VisitorAbsResult::ptr res = VisitorAbsResult::create();
+    AnyResult::ptr group_res = expr->subExpr->accept(this);
+    return group_res;
+}
+
+AnyResult::ptr Interpreter::visit(LiteralExpr* expr)
+{
+    AnyResult::ptr res = AnyResult::create();
+    if (expr->literal.token == TokenType::NUMBER) {
+        res->type = prim_type::Number;
+        auto tmp = std::stold(expr->literal.lexeme);
+        res->value = Any(tmp);
+    } else if (expr->literal.token == TokenType::STRING) {
+        res->type = prim_type::String;
+        res->value = Any(expr->literal.lexeme);
+        
+    } else if (expr->literal.token == TokenType::IDENTIFIER) {
+        // search in environment
+        res->type = prim_type::String;
+        res->value = Any(expr->literal.lexeme);
+        
+    }
     return res;
 }
 
-VisitorAbsResult::ptr Interpreter::visit(LiteralExpr* expr)
+AnyResult::ptr Interpreter::visit(PrintStmt* expr)
 {
-    VisitorAbsResult::ptr res = VisitorAbsResult::create();
+    AnyResult::ptr res = AnyResult::create();
     return res;
 }
 
-VisitorAbsResult::ptr Interpreter::visit(PrintStmt* expr)
+AnyResult::ptr Interpreter::visit(ExprStmt* expr)
 {
-    VisitorAbsResult::ptr res = VisitorAbsResult::create();
+    AnyResult::ptr res = AnyResult::create();
     return res;
 }
 
-VisitorAbsResult::ptr Interpreter::visit(ExprStmt* expr)
+AnyResult::ptr Interpreter::visit(AssignExpr* expr)
 {
-    VisitorAbsResult::ptr res = VisitorAbsResult::create();
+    AnyResult::ptr res = AnyResult::create();
     return res;
 }
 
-VisitorAbsResult::ptr Interpreter::visit(AssignExpr* expr)
+AnyResult::ptr Interpreter::visit(DeclStmt* expr)
 {
-    VisitorAbsResult::ptr res = VisitorAbsResult::create();
-    return res;
-}
-
-VisitorAbsResult::ptr Interpreter::visit(DeclStmt* expr)
-{
-    VisitorAbsResult::ptr res = VisitorAbsResult::create();
+    AnyResult::ptr res = AnyResult::create();
     return res;
 }
