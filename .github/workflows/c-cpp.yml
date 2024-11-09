@@ -1,23 +1,39 @@
-name: C/C++ CI
-          
+name: loxxcc
+
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: configure
-      run: ./configure
-    - name: make
-      run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up C++ environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+     
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ build-essential libgtest-dev
+          cd /usr/src/gtest
+          sudo cmake .
+          sudo make
+          sudo cp *.a /usr/lib
+
+      - name: Build and run tests
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+          make
+          ctest
