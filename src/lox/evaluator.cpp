@@ -2,6 +2,7 @@
 #include <memory>
 #include <limits>
 #include "types.h"
+#include "errors.h"
 #include "Utility.h"
 #include "visitor_instance.h"
 #include "expression.h"
@@ -22,9 +23,9 @@ static T binary_operator_arithmetic(const Token& tk, T loprd, T roprd)
     case TokenType::STAR:
         cnt_res =  loprd * roprd; break;
     case TokenType::PERCENT:
-        cnt_res =  loprd % roprd; break;
+        cnt_res =  static_cast<number>((static_cast<long int>(loprd) % static_cast<long int>(roprd))); break;
     default:
-        throw std::exception("Unknow operator: " + tk.lexeme);
+        throw bad_operator(std::string("Unknow operator: ") + tk.lexeme);
         break;
     }
     return cnt_res;
@@ -56,7 +57,7 @@ static bool binary_operator_comparsion(const Token& tk, const T& loprd, const T&
     case TokenType::LESS:
         cnt_res =  loprd < roprd; break;
     default:
-        throw std::exception("Unknow operator: " + expr->op.lexeme);
+        throw bad_operator(std::string("Unknow operator: {}") + tk.lexeme);
         break;
     }
     return cnt_res;
@@ -94,7 +95,7 @@ AnyResult::ptr Interpreter::visit(BinaryExpr* expr)
             res->type = prim_type::String;
             return res;
         } else {
-            throw std::exception("String can not operand on " + expr->op.lexeme);
+            throw bad_oprand(std::string("String can not operand on ") + expr->op.lexeme);
         }
     }
 
@@ -142,7 +143,7 @@ AnyResult::ptr Interpreter::visit(UnaryExpr* expr)
             res->value = Any(!(res_oprd->value.get<bool>()));
             res->type = prim_type::Boolean;
         } else {
-            throw std::exception("Can't use that operator " + tk.lexeme);
+            throw bad_operator(std::string("Can't use that operator ") + tk.lexeme);
         }
         return res;
     }

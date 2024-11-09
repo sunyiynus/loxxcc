@@ -1,5 +1,6 @@
 #ifndef EVALUATOR_H
 #define EVALUATOR_H
+#include <map>
 #include "visitor_instance.h"
 
 

@@ -1,6 +1,7 @@
 #ifndef STMT_H
 #define STMT_H
 #include <memory>
+#include <list>
 #include "visitor.h"
 #include "visitor_instance.h"
 
@@ -20,7 +21,7 @@ public:
     static ptr create(AbsExpr::ptr expr) {
         auto res = std::make_shared<PrintStmt>();
         res->expression = expr;
-        return std::static_pointer_cast<AbsExpr::ptr::element_type>(res);
+        return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
     }
 public:
     AbsExpr::ptr expression;
@@ -33,7 +34,7 @@ public:
     static ptr create(AbsExpr::ptr expr) {
         auto res = std::make_shared<ExprStmt>();
         res->expression = expr;
-        return std::static_pointer_cast<AbsExpr::ptr::element_type>(res);
+        return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
     }
 public:
     AbsExpr::ptr expression;
@@ -49,7 +50,7 @@ public:
         auto res = std::make_shared<DeclStmt>();
         res->expression = expr;
         res->tk = tk;
-        return std::static_pointer_cast<AbsExpr::ptr::element_type>(res);
+        return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
     }
 public:
     Token tk;
@@ -62,9 +63,9 @@ public:
 
 class BlockStmt : VisitableStmt<BlockStmt> {
 public: 
-    static ptr create(std::list<AbsStmt::ptr> stmts) {
+    static ptr create(std::list<AbsStmt::ptr> stms) {
         auto res = std::make_shared<BlockStmt>();
-        res->stmts = stmts;
+        res->stmts = stms;
         return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
     }
 public:

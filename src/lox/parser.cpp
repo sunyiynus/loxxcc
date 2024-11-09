@@ -2,7 +2,7 @@
 #include <functional>
 #include <list>
 #include "errors.h"
-
+#include "format.h"
 
 AbsExpr::ptr Parser::parse() {
     std::list<AbsStmt::ptr> stmts;
@@ -60,7 +60,7 @@ void Parser::consume(std::initializer_list<TokenType> tktypes)
         return;
     }
 
-    // error
+    std::string error = 
 
 }
 
@@ -159,6 +159,7 @@ AbsStmt::ptr Parser::printStmt()
 {
     consume({TokenType::PRINT});
     AbsExpr::ptr expr = expression();
+    consume({TokenType::COMMA});
     return PrintStmt::create(expr);
 
 }
@@ -166,7 +167,10 @@ AbsStmt::ptr Parser::printStmt()
 AbsStmt::ptr Parser::blockStmt()
 {
     consume({TokenType::LEFT_BRACE});
-    std::list<AbsStmt::ptr> stmts = declaration();
+    std::list<AbsStmt::ptr> stmts;
+    while( !atEnd() && !matchTokens({TokenType::RIGHT_BRACE})) {
+        stmts.push_back(declaration());
+    }
     consume({TokenType::RIGHT_BRACE});
     return BlockStmt::create(stmts);
 }
