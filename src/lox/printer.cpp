@@ -52,7 +52,7 @@ AnyResult::ptr Printer::visit(ExprStmt* expr)
     return res;
 }
 
-AnyResult::ptr Printer::visit(DeclStmt* expr)
+AnyResult::ptr Printer::visit(VarDecl* expr)
 {
     AnyResult::ptr res = AnyResult::create();
     return res;

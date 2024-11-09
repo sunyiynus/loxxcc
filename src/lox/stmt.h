@@ -63,7 +63,7 @@ public:
 
 class BlockStmt : public VisitableStmt<BlockStmt> {
 public: 
-    static ptr create(std::list<AbsStmt::ptr> stms) {
+    static ptr create(std::list<AbsDecl::ptr> stms) {
         auto res = std::make_shared<BlockStmt>();
         res->stmts = stms;
         return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);

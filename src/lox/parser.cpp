@@ -168,7 +168,7 @@ AbsStmt::ptr Parser::printStmt()
 AbsStmt::ptr Parser::blockStmt()
 {
     consume({TokenType::LEFT_BRACE});
-    std::list<AbsStmt::ptr> stmts;
+    std::list<AbsDecl::ptr> stmts;
     while( !atEnd() && !matchTokens({TokenType::RIGHT_BRACE})) {
         stmts.push_back(declaration());
     }
@@ -176,7 +176,7 @@ AbsStmt::ptr Parser::blockStmt()
     return BlockStmt::create(stmts);
 }
 
-AbsStmt::ptr Parser::declaration()
+AbsDecl::ptr Parser::declaration()
 {
     if (matchTokens({TokenType::VAR})) {
         return varDecl();
@@ -186,25 +186,28 @@ AbsStmt::ptr Parser::declaration()
 }
 
 
-AbsStmt::ptr Parser::statement()
+AbsDecl::ptr Parser::statement()
 {
+    AbsStmt::ptr res;
     if (matchTokens({TokenType::PRINT})) {
-        return printStmt();
+        res =  printStmt();
     }
     if (matchTokens({TokenType::LEFT_BRACE})) {
-        return blockStmt();
+        res = blockStmt();
     }
-
+    return StmtDecl::create(res);
 }
 
-AbsStmt::ptr Parser::varDecl()
+AbsDecl::ptr Parser::varDecl()
 {
-    consume({TokenType::LEFT_BRACE});
-    std::list<AbsStmt::ptr> stmts;
-    while (!atEnd() && !matchTokens({TokenType::RIGHT_BRACE})) {
-        stmts.push_back(declaration());
+    consume({TokenType::VAR});
+    Token tk = current();
+    AbsExpr::ptr expr;
+    if (matchTokens({TokenType::EQUAL})) {
+        expr = expression();
     }
-    consume({TokenType::RIGHT_BRACE});
-    return DeclStmt::create(stmts);
+    
+    consume({TokenType::COMMA});
+    return VarDecl::create(tk, expr);
 
 }

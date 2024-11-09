@@ -4,6 +4,7 @@
 #include "common.h"
 #include "expression.h"
 #include "stmt.h"
+#include "decl.h"
 
 class Parser {
 public:
@@ -31,9 +32,9 @@ public:
     AbsStmt::ptr declStmt();
     AbsStmt::ptr printStmt();
     AbsStmt::ptr exprStmt();
-    AbsStmt::ptr declaration();
-    AbsStmt::ptr varDecl();
-    AbsStmt::ptr statement();
+    AbsDecl::ptr declaration();
+    AbsDecl::ptr varDecl();
+    AbsDecl::ptr statement();
     AbsStmt::ptr blockStmt();
 
     template<AbsExpr::ptr(Parser::*call)()>

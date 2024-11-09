@@ -210,7 +210,7 @@ AnyResult::ptr Interpreter::visit(ExprStmt* expr)
 }
 
 
-AnyResult::ptr Interpreter::visit(DeclStmt* expr)
+AnyResult::ptr Interpreter::visit(VarDecl* expr)
 {
     AnyResult::ptr res = AnyResult::create();
     return res;

@@ -4,6 +4,7 @@
 #include "visitor.h"
 #include "visitor_instance.h"
 #include "expression.h"
+#include "stmt.h"
 
 class AbsDecl {
 public:
@@ -28,6 +29,20 @@ public:
     AbsExpr::ptr expression;
 public: 
     using VisitableDecl<VarDecl>::accept;
+};
+
+
+class StmtDecl : public VisitableDecl<StmtDecl> {
+public:
+    static ptr create(AbsStmt::ptr stmt) {
+        auto res = std::make_shared<StmtDecl>();
+        res->stmt = stmt;
+        return std::static_pointer_cast<AbsDecl::ptr::element_type>(res);
+    }
+public:
+    AbsStmt::ptr stmt;
+public: 
+    using VisitableDecl<StmtDecl>::accept;
 };
 
 

@@ -27,7 +27,7 @@ public:
     AnyResult::ptr visit(AssignExpr* expr) override;
     AnyResult::ptr visit(PrintStmt* expr) override;
     AnyResult::ptr visit(ExprStmt* expr) override;
-    AnyResult::ptr visit(DeclStmt* expr) override;
+    AnyResult::ptr visit(VarDecl* expr) override;
 };
 
 
