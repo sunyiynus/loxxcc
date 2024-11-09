@@ -28,7 +28,7 @@ jobs:
           cd /usr/src/gtest
           sudo cmake .
           sudo make
-          sudo cp *.a /usr/lib
+          # sudo cp *.a /usr/lib
 
       - name: Build and run tests
         run: |
