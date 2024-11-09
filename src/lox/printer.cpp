@@ -33,12 +33,32 @@ AnyResult::ptr Printer::visit(LiteralExpr* expr)
     res->resultStr = expr->literal.literal;
     return res;
 }
+
+AnyResult::ptr Printer::visit(AssignExpr* expr)
+{
+    AnyResult::ptr res = AnyResult::create();
+    return res;
+}
+
 AnyResult::ptr Printer::visit(PrintStmt* expr)
 {
     AnyResult::ptr res = AnyResult::create();
     return res;
 }
+
 AnyResult::ptr Printer::visit(ExprStmt* expr)
+{
+    AnyResult::ptr res = AnyResult::create();
+    return res;
+}
+
+AnyResult::ptr Printer::visit(DeclStmt* expr)
+{
+    AnyResult::ptr res = AnyResult::create();
+    return res;
+}
+
+AnyResult::ptr Printer::visit(BlockStmt* expr)
 {
     AnyResult::ptr res = AnyResult::create();
     return res;

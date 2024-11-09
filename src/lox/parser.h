@@ -32,6 +32,8 @@ public:
     AbsStmt::ptr printStmt();
     AbsStmt::ptr exprStmt();
     AbsStmt::ptr declaration();
+    AbsStmt::ptr varDecl();
+    AbsStmt::ptr statement();
     AbsStmt::ptr blockStmt();
 
     template<AbsExpr::ptr(Parser::*call)()>

@@ -10,8 +10,12 @@ public:
     AnyResult::ptr visit(UnaryExpr* expr) override;
     AnyResult::ptr visit(GroupExpr* expr) override;
     AnyResult::ptr visit(LiteralExpr* expr) override;
+    AnyResult::ptr visit(AssignExpr* expr) override;
     AnyResult::ptr visit(PrintStmt* expr) override;
     AnyResult::ptr visit(ExprStmt* expr) override;
+    AnyResult::ptr visit(DeclStmt* expr) override;
+    AnyResult::ptr visit(BlockStmt* expr) override;
+
 
 };
 

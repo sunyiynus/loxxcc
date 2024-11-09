@@ -57,11 +57,12 @@ void Parser::synchronize()
 void Parser::consume(std::initializer_list<TokenType> tktypes)
 {
     if (matchTokens(tktypes)) {
+        advance();
         return;
     }
 
-    std::string error = 
-
+    std::string error = "Have meet unexpect token: " + static_cast<std::string>(current());
+    throw bad_grammar(error);
 }
 
 AbsExpr::ptr Parser::expression()
@@ -178,17 +179,32 @@ AbsStmt::ptr Parser::blockStmt()
 AbsStmt::ptr Parser::declaration()
 {
     if (matchTokens({TokenType::VAR})) {
-        return declStmt();
+        return varDecl();
     }
 
+    return statement();
+}
+
+
+AbsStmt::ptr Parser::statement()
+{
     if (matchTokens({TokenType::PRINT})) {
         return printStmt();
     }
-
     if (matchTokens({TokenType::LEFT_BRACE})) {
         return blockStmt();
     }
-    return exprStmt();
 
 }
 
+AbsStmt::ptr Parser::varDecl()
+{
+    consume({TokenType::LEFT_BRACE});
+    std::list<AbsStmt::ptr> stmts;
+    while (!atEnd() && !matchTokens({TokenType::RIGHT_BRACE})) {
+        stmts.push_back(declaration());
+    }
+    consume({TokenType::RIGHT_BRACE});
+    return DeclStmt::create(stmts);
+
+}

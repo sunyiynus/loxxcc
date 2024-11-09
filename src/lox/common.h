@@ -50,6 +50,11 @@ struct Token
     std::string lexeme;
     std::uint64_t line;
     TokenType token;
+
+    explicit operator std::string() const {
+        std::string res = std::to_string(line) + ": " + lexeme;
+        return res;
+    }
 };
 
 

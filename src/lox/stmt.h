@@ -8,15 +8,15 @@
 class AbsStmt {
 public:
     using ptr = std::shared_ptr<AbsStmt>;
-    virtual AnyResult::ptr accept(AstVisitor* visitor) = 0;
+    virtual AnyResult::ptr accept(InterpreteVisitor* visitor) = 0;
 };
 
 
-template<typename DerivedT, typename PT = AbsStmt, typename VT = AstVisitor>
+template<typename DerivedT, typename PT = AbsStmt, typename VT = InterpreteVisitor>
 using VisitableStmt = Visitable<DerivedT, PT, VT>;
 
 
-class PrintStmt : VisitableStmt<PrintStmt> {
+class PrintStmt : public VisitableStmt<PrintStmt> {
 public:
     static ptr create(AbsExpr::ptr expr) {
         auto res = std::make_shared<PrintStmt>();
@@ -29,7 +29,7 @@ public:
     using VisitableStmt<PrintStmt>::accept;
 };
 
-class ExprStmt : VisitableStmt<ExprStmt> {
+class ExprStmt : public VisitableStmt<ExprStmt> {
 public: 
     static ptr create(AbsExpr::ptr expr) {
         auto res = std::make_shared<ExprStmt>();
@@ -44,7 +44,7 @@ public:
 };
 
 
-class DeclStmt : VisitableStmt<DeclStmt> {
+class DeclStmt : public VisitableStmt<DeclStmt> {
 public: 
     static ptr create(const Token& tk, AbsExpr::ptr expr) {
         auto res = std::make_shared<DeclStmt>();
@@ -61,7 +61,7 @@ public:
 
 };
 
-class BlockStmt : VisitableStmt<BlockStmt> {
+class BlockStmt : public VisitableStmt<BlockStmt> {
 public: 
     static ptr create(std::list<AbsStmt::ptr> stms) {
         auto res = std::make_shared<BlockStmt>();

@@ -150,9 +150,9 @@ AnyResult::ptr Interpreter::visit(UnaryExpr* expr)
 
     if (numericFlag) {
         if (tk.token == TokenType::MINUS) {
-            res->value = Any(-);
+            res->value = Any(-tmpValue);
         } else if (tk.token == TokenType::BANG) {
-            auto tmp = res_oprd->value.get<number>();
+            auto tmp = tmpValue;
             auto tmp_res = false;
             if (tmp < std::numeric_limits<number>::epsilon()) {
                 tmp_res = true;
