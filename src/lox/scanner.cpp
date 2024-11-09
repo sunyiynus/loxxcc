@@ -92,6 +92,9 @@ const TokensType& Scanner::scanTokens()
         case SingleCharactor::Star:
             makeToken(TokenType::STAR);
             break;
+        case SingleCharactor::Percent:
+            makeToken(TokenType::PERCENT);
+            break;
         case SingleCharactor::Bang:
             if (forwardMatch(SingleCharactor::Assign)) {
                 advanceHead();

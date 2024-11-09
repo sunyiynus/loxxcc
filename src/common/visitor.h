@@ -16,7 +16,7 @@ public:
 
 
 enum class prim_type {
-    Number, LongInt, String
+    Number, LongInt, String, Boolean
 };
 
 struct AnyResult: public add_create_func<AnyResult> {

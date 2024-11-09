@@ -59,6 +59,17 @@ std::ostream& operator<<(std::ostream &out, TT<Args...> const &cont) {
   return out;
 }
 
+template<typename T>
+static bool match(std::initializer_list<T> cc, const T& type)
+{
+    for (const auto tt: cc) {
+        if (type == tt) {
+            return true;
+        }
+    }
+    return false;
+}
+
 }  // namespace Utility
 
 #endif  // UTILITY_H

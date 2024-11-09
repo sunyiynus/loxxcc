@@ -10,7 +10,7 @@
 
 enum class TokenType {
     // Single-charactor 
-    LEFT_BRACE, RIGHT_BRACE, LEFT_PAREN, RIGHT_PAREN,
+    LEFT_BRACE, RIGHT_BRACE, LEFT_PAREN, RIGHT_PAREN,PERCENT,
     COMMA, DOT, SEMICOM, MINUS, PLUS, STAR, SLASH, SLASH_SLASH,
     // one or more charactors 
     EQUAL, BANG, BANG_EQUAL, EQUAL_EQUAL, 
@@ -74,6 +74,7 @@ namespace SingleCharactor
     constexpr std::string::value_type WhiteSpace  = ' ';
     constexpr std::string::value_type DoubleQuote = '"';
     constexpr std::string::value_type SingleQuote = '\'';
+    constexpr std::string::value_type Percent     = '%';
 
 } // namespace SingleCharactor
 
