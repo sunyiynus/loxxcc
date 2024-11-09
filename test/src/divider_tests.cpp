@@ -3,7 +3,7 @@
 //
 //#include <vm.h>
 #include <string>
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "Utility.h"
 #include "config.h"
 

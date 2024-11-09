@@ -1,5 +1,5 @@
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "scanner.h"
 #include "Utility.h"
 #include "config.h"

@@ -15,9 +15,9 @@ set(SOURCE_FILES main.cpp
 
 add_executable(divider_tests ${SOURCE_FILES})
 target_link_libraries(divider_tests gtest loxcompile)
-target_include_directories(divider_tests PRIVATE
-    ${CMAKE_SOURCE_DIR}/extern/googletest/googletest/include
-)
+# target_include_directories(divider_tests PRIVATE
+#     ${CMAKE_SOURCE_DIR}/extern/googletest/googletest/include
+# )
 
 # 设置目标的输出目录到 bin 目录
 set_target_properties(divider_tests PROPERTIES

@@ -7,9 +7,21 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
 
 set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR})
 
+# 使用 FetchContent 下载并配置 GoogleTest
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+
+
+
 
 # 添加 GoogleTest 子模块
-add_subdirectory(extern/googletest)
+# add_subdirectory(extern/googletest)
 
 set(LOXXCC_INSTALL_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/src/common)
 set(LOXXCC_INSTALL_BIN_DIR ${PROJECT_SOURCE_DIR}/bin)
