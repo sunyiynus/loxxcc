@@ -25,4 +25,4 @@ set_target_properties(divider_tests PROPERTIES
 )
 
 enable_testing()
-add_test(TEST all_test COMMOND divider_tests)
+add_test(NAME LoxxccTest COMMAND divider_tests)
