@@ -220,6 +220,7 @@ AbsStmt::ptr Parser::varDecl()
     consume({TokenType::VAR});
     Token tk = current();
     AbsExpr::ptr expr;
+    advance();
     if (matchTokens({TokenType::EQUAL})) {
         expr = expression();
     }
