@@ -9,7 +9,7 @@ class Scanner {
 public:
     Scanner() = default;
     Scanner(const std::string& s);
-    const TokensType& scanTokens();
+    const Tokens& scanTokens();
 
     bool atEnd() const;
     std::string::value_type current();
@@ -35,7 +35,7 @@ private:
     std::string::size_type tail;
     std::string::size_type head;
     std::uint64_t currenLine;
-    TokensType tokens;
+    Tokens tokens;
 };
 
 #endif // SCANNER_H

@@ -120,7 +120,7 @@ namespace Keywords
 
 
 
-using TokensType = std::vector<Token>;
+using Tokens = std::vector<Token>;
 
 std::ostream& operator<<(std::ostream& outstream, const std::vector<Token>& tokens);
 

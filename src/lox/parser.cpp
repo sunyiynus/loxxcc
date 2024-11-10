@@ -4,12 +4,13 @@
 #include "errors.h"
 #include "format.h"
 
-AbsExpr::ptr Parser::parse() {
+std::list<AbsStmt::ptr> Parser::parse() {
     std::list<AbsStmt::ptr> stmts;
 
     while (!atEnd()) {
         stmts.push_back(declaration());
     }
+    return stmts;
 }
 
 const Token& Parser::current()
@@ -18,8 +19,16 @@ const Token& Parser::current()
 }
 
 
+const Token& Parser::previous()
+{
+    auto tmpItr = curItr;
+    tmpItr--;
+    return *tmpItr;
+}
+
+
 bool Parser::atEnd() const {
-    return curItr == tokens.end();
+    return curItr == tokensSeq.end();
 }
 
 bool Parser::matchTokens(std::initializer_list<TokenType> tktypes)
@@ -134,11 +143,14 @@ AbsExpr::ptr Parser::primary()
 }
 
 AbsExpr::ptr Parser::assignExpr() 
-{
-    Token tk = current();
+{   AbsExpr::ptr res = equatity();
+    Token identifier = current();
+    if (matchTokens({TokenType::EQUAL})) {
+        identifier = previous();
+    }
     consume({TokenType::EQUAL});
     AbsExpr::ptr expr = expression();
-    return AssignExpr::create(tk, expr);
+    return AssignExpr::create(identifier, expr);
 }
 
 AbsStmt::ptr Parser::exprStmt()
@@ -169,11 +181,15 @@ AbsStmt::ptr Parser::blockStmt()
 
 AbsStmt::ptr Parser::declaration()
 {
-    if (matchTokens({TokenType::VAR})) {
-        return varDecl();
+    try {
+        if (matchTokens({TokenType::VAR})) {
+            return varDecl();
+        }
+        return statement();
+    } catch (const std::exception& e) {
+        synchronize();
+        return nullptr;
     }
-
-    return statement();
 }
 
 
@@ -186,6 +202,7 @@ AbsStmt::ptr Parser::statement()
     if (matchTokens({TokenType::LEFT_BRACE})) {
         res = blockStmt();
     }
+    res = exprStmt();
     return StmtDecl::create(res);
 }
 

@@ -17,7 +17,7 @@ std::ostream& operator<<(std::ostream& outstream, const std::vector<Token>& toke
 Scanner::Scanner(const std::string& s): src(s), head(0), tail(0) {}
 
 
-const TokensType& Scanner::scanTokens()
+const Tokens& Scanner::scanTokens()
 {
 
     if (src.empty()) {

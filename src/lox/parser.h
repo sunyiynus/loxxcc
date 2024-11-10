@@ -8,11 +8,18 @@
 class Parser {
 public:
 
-    Parser(const TokensType& tk): tokens(tk), curItr(tokens.begin()) {}
-
-    Parser():tokens(), curItr(tokens.begin()) {}
-    AbsExpr::ptr parse();
+    Parser(const Tokens& tk): tokensSeq(tk), curItr(tokensSeq.begin()) {}
+    Parser():tokensSeq(), curItr(tokensSeq.begin()) {}
+    Parser(Parser&& p) : tokensSeq(std::move(p.tokensSeq)), curItr(tokensSeq.begin()) {}
+    Parser& operator=(Parser&& p)
+    {
+        tokensSeq = std::move(p.tokensSeq);
+        curItr = tokensSeq.begin();
+        return *this;
+    }
+public:
     const Token& current();
+    const Token& previous();
     bool atEnd() const ;
     bool matchTokens(std::initializer_list<TokenType> tktypes);
     void advance();
@@ -20,6 +27,7 @@ public:
     void consume(std::initializer_list<TokenType> tktypes);
     void error();
 
+    std::list<AbsStmt::ptr> parse();
     AbsExpr::ptr expression();
     AbsExpr::ptr equatity();
     AbsExpr::ptr comparsion();
@@ -51,8 +59,8 @@ public:
 
 
 private:
-    TokensType tokens;
-    TokensType::iterator curItr;
+    Tokens tokensSeq;
+    Tokens::iterator curItr;
 };
 
 #endif // PARSER_H
