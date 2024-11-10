@@ -55,7 +55,16 @@ struct Token
         std::string res = std::to_string(line) + ": " + lexeme;
         return res;
     }
+
 };
+
+inline bool operator==(const Token& lhs, const Token& rhs) {
+    if (lhs.lexeme == rhs.lexeme &&
+        lhs.token == rhs.token) {
+            return true;
+        }
+    return false;
+}
 
 
 namespace SingleCharactor

@@ -18,7 +18,9 @@ protected:
 
     void SetUp() override {
         // Initialize tokens or other necessary setup before each test case
-        tokens = {/* Add specific tokens here */};
+        string src = "a + b / 2 * 10 + 4 - 10;    ";
+        Scanner lexer(src);
+        tokens = lexer.scanTokens();
         parser = Parser(tokens);
     }
 
