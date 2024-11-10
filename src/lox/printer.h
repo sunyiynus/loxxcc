@@ -3,7 +3,7 @@
 #include "expression.h"
 #include "stmt.h"
 
-class Printer : public AstVisitor {
+class Printer : public InterpreteVisitor {
 public:
     Printer() = default;
     AnyResult::ptr visit(BinaryExpr* expr) override;
@@ -13,8 +13,9 @@ public:
     AnyResult::ptr visit(AssignExpr* expr) override;
     AnyResult::ptr visit(PrintStmt* expr) override;
     AnyResult::ptr visit(ExprStmt* expr) override;
-    AnyResult::ptr visit(VarDecl* expr) override;
     AnyResult::ptr visit(BlockStmt* expr) override;
+    AnyResult::ptr visit(VarDecl* expr) override;
+    AnyResult::ptr visit(StmtDecl* expr) override;
 
 
 };

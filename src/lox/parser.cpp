@@ -141,15 +141,6 @@ AbsExpr::ptr Parser::assignExpr()
     return AssignExpr::create(tk, expr);
 }
 
-
-AbsStmt::ptr Parser::declStmt()
-{
-    Token tk = current();
-    consume({TokenType::EQUAL});
-    AbsExpr::ptr expr = expression();
-    return DeclStmt::create(tk, expr);
-}
-
 AbsStmt::ptr Parser::exprStmt()
 {
     AbsExpr::ptr expr = expression();
@@ -168,7 +159,7 @@ AbsStmt::ptr Parser::printStmt()
 AbsStmt::ptr Parser::blockStmt()
 {
     consume({TokenType::LEFT_BRACE});
-    std::list<AbsDecl::ptr> stmts;
+    std::list<AbsStmt::ptr> stmts;
     while( !atEnd() && !matchTokens({TokenType::RIGHT_BRACE})) {
         stmts.push_back(declaration());
     }
@@ -176,7 +167,7 @@ AbsStmt::ptr Parser::blockStmt()
     return BlockStmt::create(stmts);
 }
 
-AbsDecl::ptr Parser::declaration()
+AbsStmt::ptr Parser::declaration()
 {
     if (matchTokens({TokenType::VAR})) {
         return varDecl();
@@ -186,7 +177,7 @@ AbsDecl::ptr Parser::declaration()
 }
 
 
-AbsDecl::ptr Parser::statement()
+AbsStmt::ptr Parser::statement()
 {
     AbsStmt::ptr res;
     if (matchTokens({TokenType::PRINT})) {
@@ -198,7 +189,7 @@ AbsDecl::ptr Parser::statement()
     return StmtDecl::create(res);
 }
 
-AbsDecl::ptr Parser::varDecl()
+AbsStmt::ptr Parser::varDecl()
 {
     consume({TokenType::VAR});
     Token tk = current();

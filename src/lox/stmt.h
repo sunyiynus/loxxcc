@@ -40,32 +40,14 @@ public:
     AbsExpr::ptr expression;
 public: 
     using VisitableStmt<ExprStmt>::accept;
-
 };
 
-
-class DeclStmt : public VisitableStmt<DeclStmt> {
-public: 
-    static ptr create(const Token& tk, AbsExpr::ptr expr) {
-        auto res = std::make_shared<DeclStmt>();
-        res->expression = expr;
-        res->tk = tk;
-        return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
-    }
-public:
-    Token tk;
-    AbsExpr::ptr expression;
-
-public: 
-    using VisitableStmt<DeclStmt>::accept;
-
-};
 
 class BlockStmt : public VisitableStmt<BlockStmt> {
 public: 
-    static ptr create(std::list<AbsDecl::ptr> stms) {
+    static ptr create(std::list<AbsStmt::ptr> stms) {
         auto res = std::make_shared<BlockStmt>();
-        res->stmts = stms;
+        res->stmts = std::move(stms);
         return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
     }
 public:
@@ -76,6 +58,38 @@ public:
 
 };
 
+
+template<typename DerivedT, typename PT = AbsStmt, typename VT = InterpreteVisitor>
+using VisitableDecl = Visitable<DerivedT, PT, VT>;
+
+class VarDecl : public VisitableDecl<VarDecl> {
+public:
+    static ptr create(const Token& tk, AbsExpr::ptr expr) {
+        auto res = std::make_shared<VarDecl>();
+        res->identifier = tk;
+        res->expression = expr;
+        return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
+    }
+public:
+    Token identifier;
+    AbsExpr::ptr expression;
+public: 
+    using VisitableDecl<VarDecl>::accept;
+};
+
+
+class StmtDecl : public VisitableDecl<StmtDecl> {
+public:
+    static ptr create(AbsStmt::ptr stmt) {
+        auto res = std::make_shared<StmtDecl>();
+        res->stmt = std::move(stmt);
+        return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
+    }
+public:
+    AbsStmt::ptr stmt;
+public: 
+    using VisitableDecl<StmtDecl>::accept;
+};
 
 
 

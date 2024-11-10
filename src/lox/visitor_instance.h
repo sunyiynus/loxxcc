@@ -11,17 +11,12 @@ class LiteralExpr;
 class AssignExpr;
 class PrintStmt;
 class ExprStmt;
-class VarDecl;
 class BlockStmt;
-
-
-using AstVisitor = Visitor<BinaryExpr, UnaryExpr, GroupExpr, LiteralExpr, AssignExpr, \
-                            PrintStmt, ExprStmt, VarDecl, BlockStmt>;
-
-using ExprVisitor = AstVisitor;
+class VarDecl;
+class StmtDecl;
 
 using InterpreteVisitor = Visitor<BinaryExpr, UnaryExpr, GroupExpr, LiteralExpr, AssignExpr, \
-                            PrintStmt, ExprStmt, VarDecl, BlockStmt>;
+                            PrintStmt, ExprStmt, BlockStmt, VarDecl, StmtDecl>;
 
 
 #endif // VISITOR_INSTANCE_H

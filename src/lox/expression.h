@@ -12,11 +12,11 @@
 class AbsExpr {
 public:
     using ptr = std::shared_ptr<AbsExpr>;
-    virtual AnyResult::ptr accept(ExprVisitor* visitor) = 0;
+    virtual AnyResult::ptr accept(InterpreteVisitor* visitor) = 0;
 private:
 };
 
-template<typename DeriveT, typename PT = AbsExpr, typename VT = ExprVisitor>
+template<typename DeriveT, typename PT = AbsExpr, typename VT = InterpreteVisitor>
 using VisitableExpr = Visitable<DeriveT, PT, VT>;
 
 
