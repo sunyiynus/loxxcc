@@ -6,6 +6,7 @@
 #include "Utility.h"
 #include "visitor_instance.h"
 #include "expression.h"
+#include "stmt.h"
 
 
 template <typename T>
@@ -85,7 +86,7 @@ static number arithmetic_operator(const TokenType type)
 AnyResult::ptr Interpreter::visit(BinaryExpr* expr)
 {
     AnyResult::ptr l_res = expr->lOperand->accept(this);
-    AnyResult::ptr r_res = expr->lOperand->accept(this);
+    AnyResult::ptr r_res = expr->rOperand->accept(this);
     AnyResult::ptr res = AnyResult::create();
     const Token& tk = expr->op;
 
@@ -210,9 +211,22 @@ AnyResult::ptr Interpreter::visit(PrintStmt* expr)
     return res;
 }
 
+
+AnyResult::ptr Interpreter::visit(BlockStmt* expr)
+{
+    std::list<AnyResult::ptr> resultVec;
+    for (const auto& stmt : expr->stmts) {
+        resultVec.push_back(stmt->accept(this));
+    }
+    return nullptr;
+}
+
 AnyResult::ptr Interpreter::visit(ExprStmt* expr)
 {
     AnyResult::ptr res = AnyResult::create();
+    auto tmp = expr->expression->accept(this);
+    res->type = tmp->type;
+    res->value = tmp->value;
     return res;
 }
 
@@ -220,5 +234,15 @@ AnyResult::ptr Interpreter::visit(ExprStmt* expr)
 AnyResult::ptr Interpreter::visit(VarDecl* expr)
 {
     AnyResult::ptr res = AnyResult::create();
+    return res;
+}
+
+
+AnyResult::ptr Interpreter::visit(StmtDecl* expr)
+{
+    AnyResult::ptr res = AnyResult::create();
+    auto tmp = expr->stmt->accept(this);
+    res->value = tmp->value;
+    res->type = tmp->type;
     return res;
 }

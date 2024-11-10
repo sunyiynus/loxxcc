@@ -93,6 +93,10 @@ public:
             std::cout << "Empty Any!" << std::endl;
         }
     }
+
+    operator bool() const {
+        return !(storage == nullptr);
+    }
 };
 
 

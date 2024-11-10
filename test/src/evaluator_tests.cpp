@@ -1,0 +1,35 @@
+#include <string>
+#include <gtest/gtest.h>
+#include "Utility.h"
+#include "types.h"
+#include "config.h"
+#include "scanner.h"
+#include "parser.h"
+#include "evaluator.h"
+
+using namespace std;
+
+
+TEST(EvaluatorClass_test, testcase_expression_001)
+{
+    string src = "1 + 2; 2 + 3; 3 + 3;    ";
+    ASSERT_FALSE(src.empty());
+    Scanner lexer(src);
+    auto tokens = lexer.scanTokens();
+    ASSERT_EQ(tokens.size(), 12);
+    Parser parser(tokens);
+    auto ast = parser.parse();
+    ASSERT_EQ(ast.size(), 3);
+
+    Interpreter interpreter;
+    std::vector<AnyResult::ptr> resultVec;
+    for (const auto& stmt: ast) {
+        resultVec.push_back(stmt->accept(&interpreter));
+    }
+    ASSERT_FALSE(resultVec.empty());
+    ASSERT_EQ(resultVec.size(), 3);
+    ASSERT_EQ(resultVec[0]->type, prim_type::Number);
+    ASSERT_TRUE(resultVec[0]->value);
+    ASSERT_DOUBLE_EQ(resultVec[0]->value.get<number>(), 3);
+    
+}
