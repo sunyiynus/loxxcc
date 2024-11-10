@@ -156,6 +156,7 @@ AbsExpr::ptr Parser::assignExpr()
             return AssignExpr::create(tmpTk, expr);
         }
     }
+    consume({TokenType::SEMICOM});
     return expr;
 }
 
