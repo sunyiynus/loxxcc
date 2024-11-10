@@ -1,25 +1,48 @@
 #ifndef EVALUATOR_H
 #define EVALUATOR_H
 #include <map>
+#include <vector>
 #include "visitor_instance.h"
-
+#include "expression.h"
+#include "stmt.h"
 
 
 class Environment {
 public:
+    Environment() = default;
     Environment(std::shared_ptr<Environment> parent): parentEnv(parent) {}
-    AnyResult::ptr get(const std::string& key);
-    void set(const std::string& key, AnyResult::ptr value);
-private:
-    std::map<std::string, Any> symbols;
+    AnyResult::ptr get(const std::string& key)
+    {
+        if (symbols.find(key) != symbols.end()) {
+            return symbols[key];
+        }
+        return nullptr;
+    }
+
+    void define(const std::string& key, AnyResult::ptr value)
+    {
+        symbols[key] = value;
+    }
+
+    bool haveSymbol(const std::string& key) const
+    {
+        return symbols.find(key) != symbols.end();
+    }
+public:
     std::shared_ptr<Environment> parentEnv;
+private:
+    std::map<std::string, AnyResult::ptr> symbols;
 };
 
 class Interpreter: public InterpreteVisitor {
 private:
-
+    std::shared_ptr<Environment> scopedEnvChain;
 public: 
-    Interpreter() = default;
+    Interpreter(): scopedEnvChain(std::make_shared<Environment>()) {}
+    void interprete(const std::vector<AbsStmt::ptr>& stmts);
+    void execute(AbsStmt::ptr stmt);
+    AnyResult::ptr findSymbol(const std::string& symbol);
+    AnyResult::ptr evaluate(AbsExpr::ptr expr);
     AnyResult::ptr visit(BinaryExpr* expr) override;
     AnyResult::ptr visit(UnaryExpr* expr) override;
     AnyResult::ptr visit(GroupExpr* expr) override;

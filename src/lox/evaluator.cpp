@@ -5,8 +5,7 @@
 #include "errors.h"
 #include "Utility.h"
 #include "visitor_instance.h"
-#include "expression.h"
-#include "stmt.h"
+
 
 
 template <typename T>
@@ -80,6 +79,36 @@ static number arithmetic_operator(const TokenType type)
         TokenType::PERCENT
     };
     return Utility::match(comparsionType, type);
+}
+
+
+void Interpreter::interprete(const std::vector<AbsStmt::ptr>& stmts)
+{
+    for (const auto& stmt: stmts) {
+        execute(stmt);
+    }
+}
+
+void Interpreter::execute(AbsStmt::ptr stmt)
+{
+    stmt->accept(this);
+}
+
+AnyResult::ptr Interpreter::evaluate(AbsExpr::ptr expr)
+{
+    return expr->accept(this);
+}
+
+AnyResult::ptr Interpreter::findSymbol(const std::string& symbol)
+{
+    std::shared_ptr<Environment> tmpEnv = scopedEnvChain;
+    while (tmpEnv) {
+        if (tmpEnv->haveSymbol(symbol)) {
+            return tmpEnv->get(symbol);
+        }
+        tmpEnv = tmpEnv->parentEnv;
+    }
+    return nullptr;
 }
 
 
@@ -193,16 +222,22 @@ AnyResult::ptr Interpreter::visit(Variable* expr)
     if (expr->literal.token == TokenType::IDENTIFIER) {
         // search in environment
         res->type = prim_type::String;
-        res->value = Any(expr->literal.lexeme);
-        
+        res->value = expr->literal;
     }
     return res;
 }
 
 AnyResult::ptr Interpreter::visit(AssignExpr* expr)
 {
-    AnyResult::ptr res = AnyResult::create();
-    return res;
+    auto val = evaluate(expr->expression);
+    auto oldVal = findSymbol(expr->literal.lexeme);
+    if (oldVal) {
+        oldVal->type = val->type;
+        oldVal->value = val->value;
+    } else {
+        
+    }
+    return nullptr;
 }
 
 AnyResult::ptr Interpreter::visit(PrintStmt* expr)
@@ -214,10 +249,12 @@ AnyResult::ptr Interpreter::visit(PrintStmt* expr)
 
 AnyResult::ptr Interpreter::visit(BlockStmt* expr)
 {
-    std::list<AnyResult::ptr> resultVec;
+    auto blkEnv = std::make_shared<Environment>(scopedEnvChain);
+    scopedEnvChain = blkEnv;
     for (const auto& stmt : expr->stmts) {
-        resultVec.push_back(stmt->accept(this));
+        execute(stmt);
     }
+    scopedEnvChain = blkEnv->parentEnv;
     return nullptr;
 }
 
@@ -234,6 +271,9 @@ AnyResult::ptr Interpreter::visit(ExprStmt* expr)
 AnyResult::ptr Interpreter::visit(VarDecl* expr)
 {
     AnyResult::ptr res = AnyResult::create();
+    auto key = expr->identifier.lexeme;
+    auto val = evaluate(expr->expression);
+    scopedEnvChain->define(key, val);
     return res;
 }
 
