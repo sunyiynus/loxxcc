@@ -14,8 +14,9 @@ class ExprStmt;
 class BlockStmt;
 class VarDecl;
 class StmtDecl;
+class Variable;
 
-using InterpreteVisitor = Visitor<BinaryExpr, UnaryExpr, GroupExpr, LiteralExpr, AssignExpr, \
+using InterpreteVisitor = Visitor<BinaryExpr, UnaryExpr, GroupExpr, LiteralExpr, Variable, AssignExpr, \
                             PrintStmt, ExprStmt, BlockStmt, VarDecl, StmtDecl>;
 
 

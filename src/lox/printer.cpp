@@ -34,6 +34,13 @@ AnyResult::ptr Printer::visit(LiteralExpr* expr)
     return res;
 }
 
+AnyResult::ptr Printer::visit(Variable* expr)
+{
+    AnyResult::ptr res = AnyResult::create();
+    res->resultStr = expr->literal.literal;
+    return res;
+}
+
 AnyResult::ptr Printer::visit(AssignExpr* expr)
 {
     AnyResult::ptr res = AnyResult::create();

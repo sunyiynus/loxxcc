@@ -78,6 +78,20 @@ public:
 public:
     LiteralExpr() = default;
     Token literal;
+};
+
+
+class Variable : public VisitableExpr<Variable> {
+public:
+    using ptr = std::shared_ptr<Variable>;
+    static ptr create(const Token& rp) {
+        auto res     = std::make_shared<Variable>();
+        res->literal = rp;
+        return res;
+    }
+public:
+    Variable() = default;
+    Token literal;
 }; 
 
 

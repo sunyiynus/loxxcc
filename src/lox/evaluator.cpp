@@ -180,9 +180,16 @@ AnyResult::ptr Interpreter::visit(LiteralExpr* expr)
         res->value = Any(tmp);
     } else if (expr->literal.token == TokenType::STRING) {
         res->type = prim_type::String;
-        res->value = Any(expr->literal.lexeme);
-        
-    } else if (expr->literal.token == TokenType::IDENTIFIER) {
+        res->value = Any(expr->literal.lexeme);   
+    }
+    return res;
+}
+
+
+AnyResult::ptr Interpreter::visit(Variable* expr)
+{
+    AnyResult::ptr res = AnyResult::create();
+    if (expr->literal.token == TokenType::IDENTIFIER) {
         // search in environment
         res->type = prim_type::String;
         res->value = Any(expr->literal.lexeme);

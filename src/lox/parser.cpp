@@ -76,11 +76,7 @@ void Parser::consume(std::initializer_list<TokenType> tktypes)
 
 AbsExpr::ptr Parser::expression()
 {
-    if (matchTokens({TokenType::IDENTIFIER})) {
-        return assignExpr();
-    }
-
-    return equatity();
+    return assignExpr();
 }
 
 AbsExpr::ptr Parser::equatity()
@@ -123,8 +119,14 @@ AbsExpr::ptr Parser::unary()
 
 AbsExpr::ptr Parser::primary()
 {
-    if (matchTokens({TokenType::NUMBER, TokenType::STRING, TokenType::IDENTIFIER})) {
+    if (matchTokens({TokenType::NUMBER, TokenType::STRING})) {
          auto res = LiteralExpr::create(current());
+         advance();
+         return res;
+    }
+
+    if (matchTokens({TokenType::IDENTIFIER})) {
+         auto res = Variable::create(current());
          advance();
          return res;
     }
@@ -143,14 +145,18 @@ AbsExpr::ptr Parser::primary()
 }
 
 AbsExpr::ptr Parser::assignExpr() 
-{   AbsExpr::ptr res = equatity();
-    Token identifier = current();
+{   AbsExpr::ptr expr = equatity();
     if (matchTokens({TokenType::EQUAL})) {
-        identifier = previous();
+        consume({TokenType::EQUAL});
+        AbsExpr::ptr value = assignExpr();
+
+        if (std::dynamic_pointer_cast<Variable::ptr>(expr)) {
+            auto tmp = std::dynamic_pointer_cast<Variable::ptr>(expr);
+            Token tmpTk = tmp->get()->literal;
+            return AssignExpr::create(tmpTk, expr);
+        }
     }
-    consume({TokenType::EQUAL});
-    AbsExpr::ptr expr = expression();
-    return AssignExpr::create(identifier, expr);
+    return expr;
 }
 
 AbsStmt::ptr Parser::exprStmt()
@@ -163,7 +169,7 @@ AbsStmt::ptr Parser::printStmt()
 {
     consume({TokenType::PRINT});
     AbsExpr::ptr expr = expression();
-    consume({TokenType::COMMA});
+    consume({TokenType::SEMICOM});
     return PrintStmt::create(expr);
 
 }
@@ -198,9 +204,11 @@ AbsStmt::ptr Parser::statement()
     AbsStmt::ptr res;
     if (matchTokens({TokenType::PRINT})) {
         res =  printStmt();
+        return StmtDecl::create(res);
     }
     if (matchTokens({TokenType::LEFT_BRACE})) {
         res = blockStmt();
+        return StmtDecl::create(res);
     }
     res = exprStmt();
     return StmtDecl::create(res);
@@ -215,7 +223,7 @@ AbsStmt::ptr Parser::varDecl()
         expr = expression();
     }
     
-    consume({TokenType::COMMA});
+    consume({TokenType::SEMICOM});
     return VarDecl::create(tk, expr);
 
 }
