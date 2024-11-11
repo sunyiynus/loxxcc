@@ -13,8 +13,8 @@ set(SOURCE_FILES
     expression.cpp
     parser.h
     parser.cpp
-    evaluator.h
-    evaluator.cpp
+    interpreter.h
+    interpreter.cpp
     stmt.h
     stmt.cpp
 )

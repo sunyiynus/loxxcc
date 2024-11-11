@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include "any.h"
+#include "types.h"
 
 
 template<typename DeriveT>
@@ -16,7 +17,7 @@ public:
 
 
 enum class prim_type {
-    Number, LongInt, String, Boolean
+    Number, LongInt, String, Boolean, Callable
 };
 
 struct AnyResult: public add_create_func<AnyResult> {
@@ -28,8 +29,33 @@ struct AnyResult: public add_create_func<AnyResult> {
     prim_type type;
     std::string resultStr;
     Any value;
-
+    operator std::string() {
+        std::string res;
+        switch (type)
+        {
+        case prim_type::Number:
+            res = std::to_string(value.get<number>());
+            break;
+        case prim_type::LongInt:
+            res = std::to_string(value.get<long int>());
+            break;
+        case prim_type::String:
+            res = value.get<std::string>();
+            break;
+        case prim_type::Boolean:
+            res = std::to_string(value.get<bool>());
+            break;
+        case prim_type::Callable:
+            res = std::to_string(value.get<bool>());
+            break;
+        
+        default:
+            break;
+        }
+        return res;
+    }
 };
+
 
 
 template <typename...Args>

@@ -34,11 +34,15 @@ private:
     std::map<std::string, AnyResult::ptr> symbols;
 };
 
+
 class Interpreter: public InterpreteVisitor {
 private:
     std::shared_ptr<Environment> scopedEnvChain;
+    std::reference_wrapper<std::ostream> output;
 public: 
-    Interpreter(): scopedEnvChain(std::make_shared<Environment>()) {}
+    Interpreter(): scopedEnvChain(std::make_shared<Environment>()), output(std::cout) {}
+    void setOutput(std::ostream& out);
+public:
     void interprete(const std::vector<AbsStmt::ptr>& stmts);
     void execute(AbsStmt::ptr stmt);
     AnyResult::ptr findSymbol(const std::string& symbol);

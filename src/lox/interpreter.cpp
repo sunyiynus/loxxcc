@@ -1,4 +1,4 @@
-#include "evaluator.h"
+#include "interpreter.h"
 #include <memory>
 #include <limits>
 #include "types.h"
@@ -79,6 +79,11 @@ static number arithmetic_operator(const TokenType type)
         TokenType::PERCENT
     };
     return Utility::match(comparsionType, type);
+}
+
+void Interpreter::setOutput(std::ostream& out)
+{
+    output = std::reference_wrapper<std::ostream>(out);
 }
 
 
@@ -242,8 +247,10 @@ AnyResult::ptr Interpreter::visit(AssignExpr* expr)
 
 AnyResult::ptr Interpreter::visit(PrintStmt* expr)
 {
-    AnyResult::ptr res = AnyResult::create();
-    return res;
+    auto tmpRes = expr->expression->accept(this);
+    auto& tmp = *tmpRes.get();
+    output.get() << static_cast<std::string>(tmp) << "\n";
+    return nullptr;
 }
 
 

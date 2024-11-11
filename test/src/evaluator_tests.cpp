@@ -5,7 +5,7 @@
 #include "config.h"
 #include "scanner.h"
 #include "parser.h"
-#include "evaluator.h"
+#include "interpreter.h"
 
 using namespace std;
 
