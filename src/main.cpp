@@ -30,11 +30,11 @@ public:
     }
 
 private:
-    
-private:
+    Interpreter interpreter;
     std::unordered_map<std::string, std::function<void(const std::vector<std::string>&)>> commands;
     bool running = true;
 
+private:
     void evaluate(const std::string& commandLine) {
         std::istringstream iss(commandLine);
         std::string commandName;

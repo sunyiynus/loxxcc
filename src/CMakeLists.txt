@@ -6,6 +6,8 @@ add_subdirectory(vm)
 set(SOURCE_FILES main.cpp)
 
 add_executable(loxxjj ${SOURCE_FILES})
+target_link_libraries(loxxjj loxcompile)
+
 # install(TARGETS divider DESTINATION ${DIVISIBLE_INSTALL_BIN_DIR})
 # 设置目标的输出目录到 bin 目录
 set_target_properties(loxxjj PROPERTIES
