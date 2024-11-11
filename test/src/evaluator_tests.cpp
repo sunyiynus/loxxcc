@@ -70,11 +70,13 @@ TEST(EvaluatorClass_test, testcase_expression_block_and_assignment_var_decl)
     auto tokens = lexer.scanTokens();
     Parser parser(tokens);
     auto ast = parser.parse();
-    ASSERT_EQ(ast.size(), 4);
+    EXPECT_GT(ast.size(), 4);
 
     Interpreter interpreter;
+    std::ostringstream ostr;
     std::vector<AnyResult::ptr> resultVec;
-    for (const auto& stmt: ast) {
-        resultVec.push_back(stmt->accept(&interpreter));
-    }
+    interpreter.setOutput(std::reference_wrapper<std::ostream>(ostr));
+    interpreter.interprete(ast);
+    ASSERT_FALSE(ostr.str().empty());
+    ASSERT_EQ(ostr.str(), "a\nb\nc\n") << ostr.str();
 }

@@ -248,8 +248,11 @@ AnyResult::ptr Interpreter::visit(AssignExpr* expr)
 AnyResult::ptr Interpreter::visit(PrintStmt* expr)
 {
     auto tmpRes = expr->expression->accept(this);
-    auto& tmp = *tmpRes.get();
-    output.get() << static_cast<std::string>(tmp) << "\n";
+    if (tmpRes) {
+        auto& tmp = *tmpRes.get();
+        output.get() << static_cast<std::string>(tmp) << "\n";
+        output.get() << __FILE__ << '\n';
+    }
     return nullptr;
 }
 
@@ -281,15 +284,14 @@ AnyResult::ptr Interpreter::visit(VarDecl* expr)
     auto key = expr->identifier.lexeme;
     auto val = evaluate(expr->expression);
     scopedEnvChain->define(key, val);
+    std::cout << static_cast<std::string>(*val.get()) << "\n";
     return res;
 }
 
 
 AnyResult::ptr Interpreter::visit(StmtDecl* expr)
 {
-    AnyResult::ptr res = AnyResult::create();
     auto tmp = expr->stmt->accept(this);
-    res->value = tmp->value;
-    res->type = tmp->type;
-    return res;
+    std::cout << static_cast<std::string>(*tmp.get()) << "\n";
+    return tmp;
 }

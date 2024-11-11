@@ -17,11 +17,11 @@ public:
 
 
 enum class prim_type {
-    Number, LongInt, String, Boolean, Callable
+    Number, LongInt, String, Boolean, Callable, Nil
 };
 
 struct AnyResult: public add_create_func<AnyResult> {
-    AnyResult() = default;
+    AnyResult() : type(prim_type::Nil) {}
     AnyResult(const AnyResult& ) = default;
     AnyResult(AnyResult&& v) = default;
     using add_create_func<AnyResult>::create;
@@ -29,7 +29,7 @@ struct AnyResult: public add_create_func<AnyResult> {
     prim_type type;
     std::string resultStr;
     Any value;
-    operator std::string() {
+    explicit operator std::string() {
         std::string res;
         switch (type)
         {
@@ -46,9 +46,10 @@ struct AnyResult: public add_create_func<AnyResult> {
             res = std::to_string(value.get<bool>());
             break;
         case prim_type::Callable:
-            res = std::to_string(value.get<bool>());
+            res = "Callable";
             break;
-        
+        case prim_type::Nil:
+            res = "nil";
         default:
             break;
         }

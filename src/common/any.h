@@ -54,7 +54,9 @@ public:
 
     Any& operator=(const Any& other) {
         if (this != &other) {
-            delete storage;
+            if (storage) {
+                delete storage;
+            }
             storage = other.storage ? other.storage->clone() : nullptr;
         }
         return *this;

@@ -4,8 +4,8 @@
 #include "errors.h"
 #include "format.h"
 
-std::list<AbsStmt::ptr> Parser::parse() {
-    std::list<AbsStmt::ptr> stmts;
+std::vector<AbsStmt::ptr> Parser::parse() {
+    std::vector<AbsStmt::ptr> stmts;
 
     while (!atEnd()) {
         stmts.push_back(declaration());

@@ -27,7 +27,7 @@ public:
     void consume(std::initializer_list<TokenType> tktypes);
     void error();
 
-    std::list<AbsStmt::ptr> parse();
+    std::vector<AbsStmt::ptr> parse();
     AbsExpr::ptr expression();
     AbsExpr::ptr equatity();
     AbsExpr::ptr comparsion();

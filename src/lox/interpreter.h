@@ -38,9 +38,11 @@ private:
 class Interpreter: public InterpreteVisitor {
 private:
     std::shared_ptr<Environment> scopedEnvChain;
+    std::shared_ptr<Environment> globalEnv;
     std::reference_wrapper<std::ostream> output;
 public: 
-    Interpreter(): scopedEnvChain(std::make_shared<Environment>()), output(std::cout) {}
+    Interpreter(): scopedEnvChain(std::make_shared<Environment>()), 
+                    globalEnv(scopedEnvChain), output(std::cout) {}
     void setOutput(std::ostream& out);
 public:
     void interprete(const std::vector<AbsStmt::ptr>& stmts);
