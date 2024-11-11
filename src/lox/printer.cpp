@@ -53,7 +53,7 @@ AnyResult::ptr Printer::visit(LiteralExpr* expr)
 {
     AnyResult::ptr res = AnyResult::create();
     auto nodeId = getExprId(expr);
-    oss << "  " << nodeId << " [label=\"Litreal" << expr->literal.lexeme << "\"];\n";
+    oss << "  " << nodeId << " [label=\"Litreal " << expr->literal.lexeme << "\"];\n";
     
     return res;
 }
@@ -81,6 +81,11 @@ AnyResult::ptr Printer::visit(AssignExpr* expr)
 AnyResult::ptr Printer::visit(PrintStmt* expr)
 {
     AnyResult::ptr res = AnyResult::create();
+    expr->expression->accept(this);
+    auto nodeId = getStmtId(expr);
+    oss << "  " << nodeId << " [label=\"PrintStmt " << "" << "\"];\n";
+    auto rightId = getExprId(expr->expression.get());
+    oss << "  " << nodeId << " -> " << rightId << ";\n";
     
     return res;
 }
@@ -88,6 +93,11 @@ AnyResult::ptr Printer::visit(PrintStmt* expr)
 AnyResult::ptr Printer::visit(ExprStmt* expr)
 {
     AnyResult::ptr res = AnyResult::create();
+    expr->expression->accept(this);
+    auto nodeId = getStmtId(expr);
+    oss << "  " << nodeId << " [label=\"ExprStmt " << "" << "\"];\n";
+    auto rightId = getExprId(expr->expression.get());
+    oss << "  " << nodeId << " -> " << rightId << ";\n";
     return res;
 }
 
@@ -95,6 +105,13 @@ AnyResult::ptr Printer::visit(ExprStmt* expr)
 AnyResult::ptr Printer::visit(BlockStmt* expr)
 {
     AnyResult::ptr res = AnyResult::create();
+    auto nodeId = getStmtId(expr);
+    oss << "  " << nodeId << " [label=\"BlockStmt " << "" << "\"];\n";
+    for (const auto& stmt : expr->stmts) {
+        stmt->accept(this);
+        auto rightId = getStmtId(stmt.get());
+        oss << "  " << nodeId << " -> " << rightId << ";\n";
+    }
     return res;
 }
 
@@ -102,6 +119,11 @@ AnyResult::ptr Printer::visit(BlockStmt* expr)
 AnyResult::ptr Printer::visit(StmtDecl* expr)
 {
     AnyResult::ptr res = expr->stmt->accept(this);
+
+    auto nodeId = getStmtId(expr);
+    oss << "  " << nodeId << " [label=\"StmtDecl " << "" << "\"];\n";
+    auto rightId = getStmtId(expr->stmt.get());
+    oss << "  " << nodeId << " -> " << rightId << ";\n";
     return res;
 }
 
@@ -109,5 +131,10 @@ AnyResult::ptr Printer::visit(StmtDecl* expr)
 AnyResult::ptr Printer::visit(VarDecl* expr)
 {
     AnyResult::ptr res = AnyResult::create();
+    expr->expression->accept(this);
+    auto nodeId = getStmtId(expr);
+    oss << "  " << nodeId << " [label=\"VarDecl var " << expr->identifier.lexeme << " = " << "\"];\n";
+    auto rightId = getExprId(expr->expression.get());
+    oss << "  " << nodeId << " -> " << rightId << ";\n";
     return res;
 }

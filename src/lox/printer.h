@@ -6,19 +6,6 @@
 #include "stmt.h"
 
 
-
-class DotGenerator {
-public:
-
-
-private:
-
-
-
-
-
-};
-
 class Printer : public InterpreteVisitor {
 public:
     Printer(): output(std::cout) {}
@@ -38,7 +25,7 @@ public:
 
     // 递归遍历节点并生成 DOT 代码
     void execute(std::vector<AbsStmt::ptr> stmts) {
-        if (!stmts.empty()) return;
+        if (stmts.empty()) return;
         for (const auto& stmt : stmts) {
             stmt->accept(this);
         }
