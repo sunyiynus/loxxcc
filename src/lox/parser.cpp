@@ -156,13 +156,14 @@ AbsExpr::ptr Parser::assignExpr()
             return AssignExpr::create(tmpTk, expr);
         }
     }
-    consume({TokenType::SEMICOM});
+    // consume({TokenType::SEMICOM});
     return expr;
 }
 
 AbsStmt::ptr Parser::exprStmt()
 {
     AbsExpr::ptr expr = expression();
+    consume({TokenType::SEMICOM});
     return ExprStmt::create(expr);
 }
 
@@ -222,6 +223,7 @@ AbsStmt::ptr Parser::varDecl()
     AbsExpr::ptr expr;
     advance();
     if (matchTokens({TokenType::EQUAL})) {
+        advance();
         expr = expression();
     }
     

@@ -63,7 +63,8 @@ TEST(EvaluatorClass_test, testcase_expression_002)
 
 TEST(EvaluatorClass_test, testcase_expression_block_and_assignment_var_decl)
 {
-    string src = Utility::ReadFile(Utility::PathJoin({g_loxSourceDir, "test/lox/assignment/associativity.lox"}));
+    string src = Utility::ReadFile(Utility::PathJoin({g_loxSourceDir, 
+                                            "test/lox/assignment/associativity.lox"}));
     ASSERT_FALSE(src.empty());
     Scanner lexer(src);
     auto tokens = lexer.scanTokens();
