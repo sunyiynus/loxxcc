@@ -237,12 +237,8 @@ AnyResult::ptr Interpreter::visit(AssignExpr* expr)
 {
     auto val = evaluate(expr->expression);
     auto oldVal = findSymbol(expr->literal.lexeme);
-    if (oldVal) {
-        oldVal->type = val->type;
-        oldVal->value = val->value;
-    } else {
-        
-    }
+    oldVal->type = val->type;
+    oldVal->value = val->value;
     return nullptr;
 }
 
