@@ -79,8 +79,8 @@ TEST(EvaluatorClass_test, testcase_expression_block_and_assignment_var_decl)
     Printer astprinter;
     astprinter.execute(ast);
     std::cout << astprinter.generateDot();
-    // interpreter.setOutput(std::reference_wrapper<std::ostream>(ostr));
-    // interpreter.interprete(ast);
-    // ASSERT_FALSE(ostr.str().empty());
-    // ASSERT_EQ(ostr.str(), "a\nb\nc\n") << ostr.str();
+    interpreter.setOutput(std::reference_wrapper<std::ostream>(ostr));
+    interpreter.interprete(ast);
+    ASSERT_FALSE(ostr.str().empty());
+    ASSERT_EQ(ostr.str(), "a\nb\nc\n") << ostr.str();
 }

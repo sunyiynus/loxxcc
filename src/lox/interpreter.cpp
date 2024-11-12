@@ -223,11 +223,10 @@ AnyResult::ptr Interpreter::visit(LiteralExpr* expr)
 
 AnyResult::ptr Interpreter::visit(Variable* expr)
 {
-    AnyResult::ptr res = AnyResult::create();
+    AnyResult::ptr res;
     if (expr->literal.token == TokenType::IDENTIFIER) {
         // search in environment
-        res->type = prim_type::String;
-        res->value = expr->literal;
+        res = findSymbol(expr->literal.lexeme);
     }
     return res;
 }
@@ -251,7 +250,6 @@ AnyResult::ptr Interpreter::visit(PrintStmt* expr)
     if (tmpRes) {
         auto& tmp = *tmpRes.get();
         output.get() << static_cast<std::string>(tmp) << "\n";
-        output.get() << __FILE__ << '\n';
     }
     return nullptr;
 }
@@ -270,28 +268,20 @@ AnyResult::ptr Interpreter::visit(BlockStmt* expr)
 
 AnyResult::ptr Interpreter::visit(ExprStmt* expr)
 {
-    AnyResult::ptr res = AnyResult::create();
-    auto tmp = expr->expression->accept(this);
-    res->type = tmp->type;
-    res->value = tmp->value;
-    return res;
+    return expr->expression->accept(this);
 }
 
 
 AnyResult::ptr Interpreter::visit(VarDecl* expr)
 {
-    AnyResult::ptr res = AnyResult::create();
     auto key = expr->identifier.lexeme;
     auto val = evaluate(expr->expression);
     scopedEnvChain->define(key, val);
-    std::cout << static_cast<std::string>(*val.get()) << "\n";
-    return res;
+    return nullptr;
 }
 
 
 AnyResult::ptr Interpreter::visit(StmtDecl* expr)
 {
-    auto tmp = expr->stmt->accept(this);
-    std::cout << static_cast<std::string>(*tmp.get()) << "\n";
-    return tmp;
+    return expr->stmt->accept(this);
 }
