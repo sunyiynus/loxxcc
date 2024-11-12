@@ -1,4 +1,5 @@
 #include <string>
+#include <random>
 #include <gtest/gtest.h>
 #include "Utility.h"
 #include "types.h"
@@ -7,6 +8,7 @@
 #include "parser.h"
 #include "interpreter.h"
 #include "printer.h"
+#include "testscaffold.h"
 
 using namespace std;
 
@@ -86,41 +88,14 @@ TEST(EvaluatorClass_test, testcase_expression_block_and_assignment_var_decl)
 }
 
 
-class ParserTestScaffold : public ::testing::Test {
-protected:
-    Tokens tokens;
-    Parser parser;
-    std::vector<AbsStmt::ptr> stmts;
-    Printer astprinter;
-    Interpreter interpreter;
-    std::ostringstream oss;
-
-    void SetUp() override {
-        // Initialize tokens or other necessary setup before each test case
-        interpreter.setOutput(std::reference_wrapper<std::ostream>(oss));
-
-    }
-
-    Token createToken(TokenType type, std::string lexeme) {
-        return Token(lexeme, lexeme, 0, type);
-    }
-
-    void loadLoxCodeFromFile(const std::string path) {
-        string src = Utility::ReadFile(path);
-        Scanner lexer(src);
-        tokens = lexer.scanTokens();
-        parser = Parser(tokens);
-        stmts = parser.parse();
-    }
-};
-
 TEST_F(ParserTestScaffold, DefaultConstructor) {
     auto filePath = Utility::PathJoin({g_loxSourceDir, "test", "lox", "parser_test.lox"});
     loadLoxCodeFromFile(filePath);
     ASSERT_GT(tokens.size(), 20);
     ASSERT_TRUE(parser.atEnd());
     astprinter.execute(stmts);
-    std::cout << astprinter.generateDot();
+    writeToDotFile(astprinter.generateDot());
+
 
     interpreter.interprete(stmts);
     ASSERT_FALSE(oss.str().empty());

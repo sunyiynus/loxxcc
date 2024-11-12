@@ -27,3 +27,36 @@ set_target_properties(divider_tests PROPERTIES
 
 enable_testing()
 add_test(NAME LoxxccTest COMMAND divider_tests)
+
+# 指定要清理 .dot 文件的目录
+set(DOT_FILE_DIR "${CMAKE_SOURCE_DIR}/bin/dot")
+
+# 自定义命令：清理 .dot 文件
+add_custom_target(clean_dot_files
+    COMMAND ${CMAKE_COMMAND} -E echo "Cleaning up .dot files in ${DOT_FILE_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E glob DOT_FILES ${DOT_FILE_DIR}/*.dot
+    COMMAND ${CMAKE_COMMAND} -E rm -f ${DOT_FILE_DIR}/*.dot
+    COMMENT "Removing all .dot files in the directory"
+)
+
+
+# 自定义目标：运行所有测试
+add_custom_target(run_tests_impl
+    DEPENDS clean_dot_files  # 确保在运行测试之前清理 .dot 文件
+    COMMAND ${CMAKE_CTEST_COMMAND}
+    COMMENT "Running all tests"
+)
+    
+add_custom_target(render_dot_files
+    DEPENDS run_tests_impl  # 确保在运行测试之前清理 .dot 文件
+    COMMAND ${CMAKE_COMMAND} -E env python3 ${CMAKE_SOURCE_DIR}/scripts/render_ast.py ${CMAKE_SOURCE_DIR}/bin/
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Rendering all .dot files to .png"
+)
+
+# 设置总执行目标
+add_custom_target(test_all
+    DEPENDS render_dot_files
+    COMMENT "Running tests and rendering DOT files"
+)
+
