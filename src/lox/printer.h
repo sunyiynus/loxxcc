@@ -27,7 +27,9 @@ public:
     void execute(std::vector<AbsStmt::ptr> stmts) {
         if (stmts.empty()) return;
         for (const auto& stmt : stmts) {
-            stmt->accept(this);
+            if (stmt) {
+                stmt->accept(this);
+            }
         }
     }
 

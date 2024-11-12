@@ -90,7 +90,9 @@ void Interpreter::setOutput(std::ostream& out)
 void Interpreter::interprete(const std::vector<AbsStmt::ptr>& stmts)
 {
     for (const auto& stmt: stmts) {
-        execute(stmt);
+        if (stmt){
+            execute(stmt);
+        }
     }
 }
 
@@ -275,8 +277,13 @@ AnyResult::ptr Interpreter::visit(ExprStmt* expr)
 AnyResult::ptr Interpreter::visit(VarDecl* expr)
 {
     auto key = expr->identifier.lexeme;
-    auto val = evaluate(expr->expression);
-    scopedEnvChain->define(key, val);
+    if (expr->expression) {
+        auto val = evaluate(expr->expression);
+        scopedEnvChain->define(key, val);
+    } else {
+        auto val = AnyResult::create();
+        scopedEnvChain->define(key, val);
+    }
     return nullptr;
 }
 

@@ -36,30 +36,7 @@ TEST_F(ParserTest, ConstructorWithTokens) {
     ASSERT_EQ(res.size(), 1);
 }
 
-class ParserTestScaffold : public ::testing::Test {
-protected:
-    Tokens tokens;
-    Parser parser;
 
-    void SetUp() override {
-        // Initialize tokens or other necessary setup before each test case
-        string src = Utility::ReadFile(Utility::PathJoin({g_loxSourceDir, "test", "lox", "parser_test.lox"}));
-        Scanner lexer(src);
-        tokens = lexer.scanTokens();
-        parser = Parser(tokens);
-    }
-
-    Token createToken(TokenType type, std::string lexeme) {
-        return Token(lexeme, lexeme, 0, type);
-    }
-};
-
-TEST_F(ParserTestScaffold, DefaultConstructor) {
-    ASSERT_GT(tokens.size(), 20);
-    auto res = parser.parse();
-    ASSERT_TRUE(parser.atEnd());
-    ASSERT_EQ(res.size(), 2);
-}
 
 // // Test the `current` method
 // TEST_F(ParserTest, CurrentToken) {

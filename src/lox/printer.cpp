@@ -131,10 +131,14 @@ AnyResult::ptr Printer::visit(StmtDecl* expr)
 AnyResult::ptr Printer::visit(VarDecl* expr)
 {
     AnyResult::ptr res = AnyResult::create();
-    expr->expression->accept(this);
     auto nodeId = getStmtId(expr);
-    oss << "  " << nodeId << " [label=\"VarDecl var " << expr->identifier.lexeme << " = " << "\"];\n";
-    auto rightId = getExprId(expr->expression.get());
-    oss << "  " << nodeId << " -> " << rightId << ";\n";
+    if (expr->expression) {
+        oss << "  " << nodeId << " [label=\"VarDecl var " << expr->identifier.lexeme << " = " << "\"];\n";
+        expr->expression->accept(this);
+        auto rightId = getExprId(expr->expression.get());
+        oss << "  " << nodeId << " -> " << rightId << ";\n";
+    }else {
+        oss << "  " << nodeId << " [label=\"VarDecl var " << expr->identifier.lexeme << ";\"];\n";
+    }
     return res;
 }

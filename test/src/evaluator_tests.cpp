@@ -84,3 +84,46 @@ TEST(EvaluatorClass_test, testcase_expression_block_and_assignment_var_decl)
     ASSERT_FALSE(ostr.str().empty());
     ASSERT_EQ(ostr.str(), "a\nb\nc\n") << ostr.str();
 }
+
+
+class ParserTestScaffold : public ::testing::Test {
+protected:
+    Tokens tokens;
+    Parser parser;
+    std::vector<AbsStmt::ptr> stmts;
+    Printer astprinter;
+    Interpreter interpreter;
+    std::ostringstream oss;
+
+    void SetUp() override {
+        // Initialize tokens or other necessary setup before each test case
+        interpreter.setOutput(std::reference_wrapper<std::ostream>(oss));
+
+    }
+
+    Token createToken(TokenType type, std::string lexeme) {
+        return Token(lexeme, lexeme, 0, type);
+    }
+
+    void loadLoxCodeFromFile(const std::string path) {
+        string src = Utility::ReadFile(path);
+        Scanner lexer(src);
+        tokens = lexer.scanTokens();
+        parser = Parser(tokens);
+        stmts = parser.parse();
+    }
+};
+
+TEST_F(ParserTestScaffold, DefaultConstructor) {
+    auto filePath = Utility::PathJoin({g_loxSourceDir, "test", "lox", "parser_test.lox"});
+    loadLoxCodeFromFile(filePath);
+    ASSERT_GT(tokens.size(), 20);
+    ASSERT_TRUE(parser.atEnd());
+    astprinter.execute(stmts);
+    std::cout << astprinter.generateDot();
+
+    interpreter.interprete(stmts);
+    ASSERT_FALSE(oss.str().empty());
+    ASSERT_EQ(oss.str(), "a\nb\nc\n") << oss.str();
+    
+}
