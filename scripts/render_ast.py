@@ -1,16 +1,7 @@
 
 import sys
+import os
 from graphviz import Source
-
-def render_dot(file_path):
-    # 读取 dot 文件并渲染
-    with open(file_path, 'r') as f:
-        dot_source = f.read()
-    graph = Source(dot_source)
-    # 输出渲染的图像文件，例如保存为 PDF 或 PNG
-    output_file = file_path.rsplit('.', 1)[0] + '.png'
-    graph.render(output_file, format='png')
-    print(f"Graph rendered and saved as {output_file}")
 
 def render_dot_files_in_directory(directory_path):
     # 检查目录是否存在
@@ -28,8 +19,8 @@ def render_dot_files_in_directory(directory_path):
                 dot_source = f.read()
             graph = Source(dot_source)
             # 保存为 PNG 文件，使用相同的文件名
-            output_file = os.path.join(directory_path, filename.rsplit('.', 1)[0] + '.png')
-            graph.render(output_file, format='png')
+            output_file = os.path.join(directory_path, filename.rsplit('.', 1)[0])
+            graph.render(output_file, format='png', cleanup=True)
             print(f"Rendered {filename} to {output_file}")
 
 if __name__ == "__main__":

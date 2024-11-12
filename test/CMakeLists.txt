@@ -34,8 +34,9 @@ set(DOT_FILE_DIR "${CMAKE_SOURCE_DIR}/bin/dot")
 # 自定义命令：清理 .dot 文件
 add_custom_target(clean_dot_files
     COMMAND ${CMAKE_COMMAND} -E echo "Cleaning up .dot files in ${DOT_FILE_DIR}"
-    COMMAND ${CMAKE_COMMAND} -E glob DOT_FILES ${DOT_FILE_DIR}/*.dot
+    # COMMAND ${CMAKE_COMMAND} -E glob DOT_FILES ${DOT_FILE_DIR}/*.dot
     COMMAND ${CMAKE_COMMAND} -E rm -f ${DOT_FILE_DIR}/*.dot
+    COMMAND ${CMAKE_COMMAND} -E rm -f ${DOT_FILE_DIR}/*.png
     COMMENT "Removing all .dot files in the directory"
 )
 
@@ -49,7 +50,7 @@ add_custom_target(run_tests_impl
     
 add_custom_target(render_dot_files
     DEPENDS run_tests_impl  # 确保在运行测试之前清理 .dot 文件
-    COMMAND ${CMAKE_COMMAND} -E env python3 ${CMAKE_SOURCE_DIR}/scripts/render_ast.py ${CMAKE_SOURCE_DIR}/bin/
+    COMMAND ${CMAKE_COMMAND} -E env python3 ${CMAKE_SOURCE_DIR}/scripts/render_ast.py ${CMAKE_SOURCE_DIR}/bin/dot
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Rendering all .dot files to .png"
 )
