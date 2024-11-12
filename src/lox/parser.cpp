@@ -131,12 +131,11 @@ AbsExpr::ptr Parser::primary()
          return res;
     }
 
-    if (matchTokens({TokenType::LEFT_BRACE})) {
+    if (matchTokens({TokenType::LEFT_PAREN})) {
         advance();
         auto expr = expression();
-        consume({TokenType::RIGHT_BRACE});
+        consume({TokenType::RIGHT_PAREN});
         auto res = GroupExpr::create(expr);
-        advance();
         return res;
     }
     bad_grammar bg("error at ");
