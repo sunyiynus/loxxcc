@@ -74,7 +74,6 @@ TEST_F(ParserTestScaffold, evaluate_associativity) {
     astprinter.execute(stmts);
     writeToDotFile(astprinter.generateDot());
 
-
     interpreter.interprete(stmts);
     ASSERT_FALSE(oss.str().empty());
     ASSERT_EQ(oss.str(), "c\nc\nc\n") << oss.str();
@@ -89,10 +88,9 @@ TEST_F(ParserTestScaffold, evaluate_parser_test) {
     ASSERT_TRUE(parser.atEnd());
     astprinter.execute(stmts);
     writeToDotFile(astprinter.generateDot());
-
-
     interpreter.interprete(stmts);
     ASSERT_FALSE(oss.str().empty());
+    std::cout << oss.str();
     // ASSERT_EQ(oss.str(), "a\nb\nc\n") << oss.str();
     
 }

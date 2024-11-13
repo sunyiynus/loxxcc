@@ -43,6 +43,13 @@ public:
     AbsStmt::ptr varDecl();
     AbsStmt::ptr statement();
     AbsStmt::ptr blockStmt();
+    AbsStmt::ptr ifStmt();
+    AbsStmt::ptr forStmt();
+    AbsStmt::ptr funcDecl();
+    Tokens parameter();
+    std::vector<AbsExpr::ptr> arguments();
+    AbsExpr::ptr call();
+    AbsExpr::ptr finishCall(AbsExpr::ptr expr);
 
     template<AbsExpr::ptr(Parser::*call)()>
     AbsExpr::ptr binary_expression_reimpl(std::initializer_list<TokenType>& tlist) {

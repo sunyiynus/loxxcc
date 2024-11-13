@@ -112,7 +112,7 @@ AbsExpr::ptr Parser::unary()
         subExpr = primary();
         subExpr = UnaryExpr::create(op, subExpr);
     } else {
-        subExpr = primary();
+        subExpr = call();
     }
     return subExpr;
 }
@@ -159,6 +159,41 @@ AbsExpr::ptr Parser::assignExpr()
     return expr;
 }
 
+
+AbsExpr::ptr Parser::finishCall(AbsExpr::ptr expr)
+{
+    consume({TokenType::LEFT_PAREN});
+    std::vector<AbsExpr::ptr> args = arguments();
+    auto identifier = std::dynamic_pointer_cast<Variable>(expr);
+    return CallExpr::create(expr, identifier->literal, args);
+}
+
+
+std::vector<AbsExpr::ptr> Parser::arguments()
+{
+    std::vector<AbsExpr::ptr> args;
+    args.push_back(primary());
+    while(!atEnd() && !matchTokens({TokenType::RIGHT_PAREN})) {
+        consume({TokenType::COMMA});
+        args.push_back(primary());
+    }
+}
+
+
+AbsExpr::ptr Parser::call()
+{
+    auto expr = primary();
+    while (true) {
+        if (matchTokens({TokenType::LEFT_PAREN})) {
+            expr = finishCall(expr);
+        } else {
+            break;
+        }
+
+    }
+    return expr;
+}
+
 AbsStmt::ptr Parser::exprStmt()
 {
     AbsExpr::ptr expr = expression();
@@ -191,6 +226,9 @@ AbsStmt::ptr Parser::declaration()
     try {
         if (matchTokens({TokenType::VAR})) {
             return varDecl();
+        }
+        if (matchTokens({TokenType::FUNC})) {
+            return funcDecl();
         }
         return statement();
     } catch (const std::exception& e) {
@@ -229,4 +267,30 @@ AbsStmt::ptr Parser::varDecl()
     consume({TokenType::SEMICOM});
     return VarDecl::create(tk, expr);
 
+}
+
+AbsStmt::ptr Parser::funcDecl()
+{
+    consume({TokenType::FUNC});
+    auto identifier = current();
+    advance();
+    consume({TokenType::LEFT_PAREN});
+    auto tks = parameter();
+    consume({TokenType::RIGHT_PAREN});
+    auto stmts = blockStmt();
+
+
+
+}
+
+Tokens Parser::parameter()
+{
+    Tokens tks;
+    tks.emplace_back(current());
+    while (!atEnd() && !matchTokens({TokenType::RIGHT_PAREN})) {
+        consume({TokenType::COMMA});
+        tks.emplace_back(current());
+        advance();
+    }
+    return tks;
 }

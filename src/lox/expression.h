@@ -109,4 +109,21 @@ public:
 }; 
 
 
+class CallExpr : public VisitableExpr<CallExpr> {
+public:
+    static ptr create(AbsExpr::ptr clee, const Token& rp, std::vector<AbsExpr::ptr> exprs) {
+        auto res     = std::make_shared<CallExpr>();
+        res->callee = clee;
+        res->identifier = rp;
+        res->expressions = exprs;
+        return res;
+    }
+public:
+    CallExpr() = default;
+    AbsExpr::ptr callee;
+    Token identifier;
+    std::vector<AbsExpr::ptr> expressions;
+}; 
+
+
 #endif // EXPRESSION_H
