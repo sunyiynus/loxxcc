@@ -37,7 +37,7 @@ public:
     std::string generateDot() {
         std::ostringstream tmposs;
         tmposs << "digraph AST {\n";
-        tmposs << "  node [shape=circle];\n";
+        tmposs << "  node [shape=records];\n";
         tmposs << oss.str();
         tmposs << "}\n";
         return tmposs.str();
