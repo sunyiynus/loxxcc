@@ -149,11 +149,12 @@ AbsExpr::ptr Parser::assignExpr()
         consume({TokenType::EQUAL});
         AbsExpr::ptr value = assignExpr();
 
-        if (std::dynamic_pointer_cast<Variable::ptr>(expr)) {
-            auto tmp = std::dynamic_pointer_cast<Variable::ptr>(expr);
-            Token tmpTk = tmp->get()->literal;
-            return AssignExpr::create(tmpTk, expr);
+        auto tmp = std::dynamic_pointer_cast<Variable>(expr);
+        if (tmp) {
+            Token tmpTk = tmp->literal;
+            return AssignExpr::create(tmpTk, value);
         }
+        // tmp = std::dynamic_pointer_cast<
     }
     // consume({TokenType::SEMICOM});
     return expr;
