@@ -22,6 +22,12 @@ target_link_libraries(divider_tests gtest loxcompile)
 
 # 设置目标的输出目录到 bin 目录
 set_target_properties(divider_tests PROPERTIES
+RUNTIME_OUTPUT_DIRECTORY ${LOXXCC_INSTALL_BIN_DIR}
+)
+add_executable(debug_tests main.cpp src/debug_tests.cpp)
+target_link_libraries(debug_tests gtest loxcompile)
+# 设置目标的输出目录到 bin 目录
+set_target_properties(debug_tests PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${LOXXCC_INSTALL_BIN_DIR}
 )
 

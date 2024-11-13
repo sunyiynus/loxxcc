@@ -154,7 +154,6 @@ AbsExpr::ptr Parser::assignExpr()
             Token tmpTk = tmp->literal;
             return AssignExpr::create(tmpTk, value);
         }
-        // tmp = std::dynamic_pointer_cast<
     }
     // consume({TokenType::SEMICOM});
     return expr;

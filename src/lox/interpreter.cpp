@@ -235,11 +235,17 @@ AnyResult::ptr Interpreter::visit(Variable* expr)
 
 AnyResult::ptr Interpreter::visit(AssignExpr* expr)
 {
-    auto val = evaluate(expr->expression);
-    auto oldVal = findSymbol(expr->literal.lexeme);
-    oldVal->type = val->type;
-    oldVal->value = val->value;
-    return nullptr;
+    AnyResult::ptr res;
+    if (expr->expression) {
+        auto val = evaluate(expr->expression);
+        auto oldVal = findSymbol(expr->literal.lexeme);
+        if (val) {
+            oldVal->type = val->type;
+            oldVal->value = val->value;
+        }
+        res = val;
+    }
+    return res;
 }
 
 AnyResult::ptr Interpreter::visit(PrintStmt* expr)
