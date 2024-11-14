@@ -45,17 +45,73 @@ public:
 
 class BlockStmt : public VisitableStmt<BlockStmt> {
 public: 
-    static ptr create(std::list<AbsStmt::ptr> stms) {
+    static ptr create(std::vector<AbsStmt::ptr> stms) {
         auto res = std::make_shared<BlockStmt>();
         res->stmts = std::move(stms);
         return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
     }
 public:
-    std::list<AbsStmt::ptr> stmts;
+    std::vector<AbsStmt::ptr> stmts;
 
 public: 
     using VisitableStmt<BlockStmt>::accept;
 
+};
+
+
+class IfStmt : public VisitableStmt<IfStmt> {
+public: 
+    static ptr create(AbsExpr::ptr ce, std::vector<AbsStmt::ptr> trueStmts,  std::vector<AbsStmt::ptr> elseStmts) {
+        auto res = std::make_shared<IfStmt>();
+        res->checkExpression = ce;
+        res->trueStmts = std::move(trueStmts);
+        res->elseStmts = std::move(elseStmts);
+        return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
+    }
+public:
+    AbsExpr::ptr checkExpression;
+    std::vector<AbsStmt::ptr> trueStmts;
+    std::vector<AbsStmt::ptr> elseStmts;
+
+public: 
+    using VisitableStmt<IfStmt>::accept;
+};
+
+
+class ForStmt : public VisitableStmt<ForStmt> {
+public: 
+    static ptr create(AbsStmt::ptr init, AbsExpr::ptr cond, AbsStmt::ptr update, std::vector<AbsStmt::ptr> stmts) {
+        auto res = std::make_shared<ForStmt>();
+        res->initializationStmt = init;
+        res->conditionExpr = cond;
+        res->updateStmt = update;
+        res->stmts = std::move(stmts);
+        return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
+    }
+public:
+    AbsStmt::ptr initializationStmt;
+    AbsExpr::ptr conditionExpr;
+    AbsStmt::ptr updateStmt;
+    std::vector<AbsStmt::ptr> stmts;
+public: 
+    using VisitableStmt<ForStmt>::accept;
+};
+
+
+class WhileStmt : public VisitableStmt<WhileStmt> {
+public: 
+    static ptr create(AbsExpr::ptr cond,std::vector<AbsStmt::ptr> stms) {
+        auto res = std::make_shared<WhileStmt>();
+        res->condition = cond;
+        res->stmts = std::move(stms);
+        return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
+    }
+public:
+    AbsExpr::ptr condition;
+    std::vector<AbsStmt::ptr> stmts;
+
+public: 
+    using VisitableStmt<WhileStmt>::accept;
 };
 
 
@@ -91,8 +147,37 @@ public:
     using VisitableDecl<StmtDecl>::accept;
 };
 
+class ClassDecl : public VisitableDecl<ClassDecl> {
+public:
+    static ptr create(AbsStmt::ptr stmt) {
+        auto res = std::make_shared<StmtDecl>();
+        res->stmt = std::move(stmt);
+        return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
+    }
+public:
+    std::vector<FuncDecl::ptr> functions;
+    Token className;
+public: 
+    using VisitableDecl<ClassDecl>::accept;
+};
 
 
+class FuncDecl : public VisitableDecl<FuncDecl> {
+public:
+    static ptr create(const Token& fname, Tokens tk, std::vector<AbsStmt::ptr> stmt) {
+        auto res = std::make_shared<FuncDecl>();
+        res->funcName = fname;
+        res->parameter = std::move(tk);
+        res->stmts = std::move(stmt);
+        return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
+    }
+public:
+    Token funcName;
+    Tokens parameter;
+    std::vector<AbsStmt::ptr> stmts;
+public: 
+    using VisitableDecl<FuncDecl>::accept;
+};
 #endif // STMT_H
 
 

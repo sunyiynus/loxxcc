@@ -115,14 +115,14 @@ public:
         auto res     = std::make_shared<CallExpr>();
         res->callee = clee;
         res->identifier = rp;
-        res->expressions = exprs;
+        res->args = exprs;
         return res;
     }
 public:
     CallExpr() = default;
     AbsExpr::ptr callee;
     Token identifier;
-    std::vector<AbsExpr::ptr> expressions;
+    std::vector<AbsExpr::ptr> args;
 }; 
 
 

@@ -165,6 +165,7 @@ AbsExpr::ptr Parser::finishCall(AbsExpr::ptr expr)
     consume({TokenType::LEFT_PAREN});
     std::vector<AbsExpr::ptr> args = arguments();
     auto identifier = std::dynamic_pointer_cast<Variable>(expr);
+    consume({TokenType::RIGHT_PAREN});
     return CallExpr::create(expr, identifier->literal, args);
 }
 
@@ -177,6 +178,7 @@ std::vector<AbsExpr::ptr> Parser::arguments()
         consume({TokenType::COMMA});
         args.push_back(primary());
     }
+    return args;
 }
 
 
@@ -189,7 +191,6 @@ AbsExpr::ptr Parser::call()
         } else {
             break;
         }
-
     }
     return expr;
 }
@@ -213,7 +214,7 @@ AbsStmt::ptr Parser::printStmt()
 AbsStmt::ptr Parser::blockStmt()
 {
     consume({TokenType::LEFT_BRACE});
-    std::list<AbsStmt::ptr> stmts;
+    std::vector<AbsStmt::ptr> stmts;
     while( !atEnd() && !matchTokens({TokenType::RIGHT_BRACE})) {
         stmts.push_back(declaration());
     }
@@ -228,7 +229,11 @@ AbsStmt::ptr Parser::declaration()
             return varDecl();
         }
         if (matchTokens({TokenType::FUNC})) {
+            consume({TokenType::FUNC});
             return funcDecl();
+        }
+        if (matchTokens({TokenType::CLASS})) {
+            return classDecl();
         }
         return statement();
     } catch (const std::exception& e) {
@@ -271,16 +276,18 @@ AbsStmt::ptr Parser::varDecl()
 
 AbsStmt::ptr Parser::funcDecl()
 {
-    consume({TokenType::FUNC});
     auto identifier = current();
     advance();
     consume({TokenType::LEFT_PAREN});
     auto tks = parameter();
     consume({TokenType::RIGHT_PAREN});
     auto stmts = blockStmt();
-
-
-
+    auto tmpStmts = std::dynamic_pointer_cast<BlockStmt>(stmts);
+    if (tmpStmts) {
+        auto funcStmts = std::move(tmpStmts->stmts);
+        return FuncDecl::create(identifier, tks, funcStmts);
+    }
+    return nullptr;
 }
 
 Tokens Parser::parameter()

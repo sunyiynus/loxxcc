@@ -204,8 +204,7 @@ AnyResult::ptr Interpreter::visit(UnaryExpr* expr)
 
 AnyResult::ptr Interpreter::visit(GroupExpr* expr)
 {
-    AnyResult::ptr group_res = expr->subExpr->accept(this);
-    return group_res;
+    return expr->subExpr->accept(this);
 }
 
 AnyResult::ptr Interpreter::visit(LiteralExpr* expr)
