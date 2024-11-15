@@ -35,12 +35,20 @@ bool Parser::matchTokens(std::initializer_list<TokenType> tktypes)
 {
     auto tmpItr = curItr;
     for (auto tktype:tktypes) {
-        if (!atEnd() && tmpItr->token == tktype) {
+        if (matchToken(tktype)) {
             return true;
         }
     }
     return false;
 }
+
+
+bool Parser::matchToken(const TokenType tktype)
+{
+    auto tmpItr = curItr;
+    return (!atEnd() && tmpItr->token == tktype) ? true : false;
+}
+
 
 void Parser::advance()
 {
@@ -243,6 +251,65 @@ AbsStmt::ptr Parser::declaration()
 }
 
 
+AbsStmt::ptr Parser::ifStmt()
+{
+    consume({TokenType::IF});
+    consume({TokenType::LEFT_PAREN});
+    auto cond = expression();
+    consume({TokenType::RIGHT_PAREN});
+    auto ifstmt = std::make_shared<IfStmt>();
+    ifstmt->checkExpression = cond;
+    if (matchToken(TokenType::LEFT_BRACE)) {
+        auto stmts = blockStmt();
+        auto tmpStmts = std::dynamic_pointer_cast<BlockStmt>(stmts);
+        ifstmt->trueStmts = std::move(tmpStmts->stmts);
+    } else {
+        ifstmt->trueStmts.push_back(statement());
+    }
+
+    if (matchToken(TokenType::ELSE)) {
+        if (matchToken(TokenType::LEFT_BRACE)) {
+            auto tmpStmts = std::dynamic_pointer_cast<BlockStmt>(blockStmt());
+            ifstmt->elseStmts = std::move(tmpStmts->stmts);
+        } else {
+            ifstmt->elseStmts.push_back(statement());
+        }
+
+    }
+    return ifstmt;
+}
+
+AbsStmt::ptr Parser::forStmt()
+{
+    consume({TokenType::FOR});
+    consume({TokenType::LEFT_PAREN});
+    auto forstmt = std::make_shared<ForStmt>();
+    forstmt->initializationStmt = statement();
+    forstmt->conditionExpr = expression();
+    consume({TokenType::SEMICOM});
+    forstmt->updateStmt = statement();
+    consume({TokenType::RIGHT_PAREN});
+    if (matchToken(TokenType::LEFT_BRACE)) {
+        forstmt->stmts = std::move(std::dynamic_pointer_cast<BlockStmt>(blockStmt())->stmts); 
+    }
+    return forstmt;
+}
+
+
+AbsStmt::ptr Parser::whileStmt()
+{
+    auto whilestmt = std::make_shared<WhileStmt>();
+    consume({TokenType::WHILE});
+    consume({TokenType::LEFT_PAREN});
+    whilestmt->condition = expression();
+    consume({TokenType::RIGHT_PAREN});
+    if (matchToken(TokenType::LEFT_BRACE)) {
+        whilestmt->stmts = std::move(std::dynamic_pointer_cast<BlockStmt>(blockStmt())->stmts);
+    }
+    return whilestmt;
+}
+
+
 AbsStmt::ptr Parser::statement()
 {
     AbsStmt::ptr res;
@@ -253,6 +320,15 @@ AbsStmt::ptr Parser::statement()
     if (matchTokens({TokenType::LEFT_BRACE})) {
         res = blockStmt();
         return StmtDecl::create(res);
+    }
+    if (matchTokens({TokenType::IF})) {
+        return ifStmt();
+    }
+    if (matchTokens({TokenType::FOR})) {
+        return forStmt();
+    }
+    if (matchTokens({TokenType::WHILE})) {
+        return whileStmt();
     }
     res = exprStmt();
     return StmtDecl::create(res);
@@ -271,7 +347,6 @@ AbsStmt::ptr Parser::varDecl()
     
     consume({TokenType::SEMICOM});
     return VarDecl::create(tk, expr);
-
 }
 
 AbsStmt::ptr Parser::funcDecl()

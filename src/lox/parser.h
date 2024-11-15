@@ -22,6 +22,7 @@ public:
     const Token& previous();
     bool atEnd() const ;
     bool matchTokens(std::initializer_list<TokenType> tktypes);
+    bool matchToken(const TokenType tktype);
     void advance();
     void synchronize();
     void consume(std::initializer_list<TokenType> tktypes);
@@ -47,6 +48,7 @@ public:
     AbsStmt::ptr forStmt();
     AbsStmt::ptr funcDecl();
     AbsStmt::ptr classDecl();
+    AbsStmt::ptr whileStmt();
     Tokens parameter();
     std::vector<AbsExpr::ptr> arguments();
     AbsExpr::ptr call();

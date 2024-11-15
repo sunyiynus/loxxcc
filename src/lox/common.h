@@ -22,7 +22,7 @@ enum class TokenType {
 
     // keywords
     CLASS, FUNC, NILL, RETURN, PRINT, IF, ELSE, WHILE,
-    CONTINUE, BREAK, VAR, THIS,
+    CONTINUE, BREAK, VAR, THIS, FOR,
     F_EOF, TRUE, FALSE,
 };
 
@@ -100,6 +100,7 @@ namespace Keywords
     const std::string Return   = "return";
     const std::string Print    = "print";
     const std::string If       = "if";
+    const std::string For      = "for";
     const std::string Else     = "else";
     const std::string While    = "while";
     const std::string Continue = "continue";
@@ -123,6 +124,7 @@ namespace Keywords
                                                     {This,      TokenType::THIS},
                                                     {True,      TokenType::TRUE},
                                                     {False,     TokenType::FALSE},
+                                                    {For,       TokenType::FOR},
                                                     };
 
 } // namespace Keywords
