@@ -270,15 +270,16 @@ AbsStmt::ptr Parser::ifStmt()
         auto tmpStmts = std::dynamic_pointer_cast<BlockStmt>(stmts);
         ifstmt->trueStmts = std::move(tmpStmts->stmts);
     } else {
-        ifstmt->trueStmts.push_back(statement());
+        ifstmt->trueStmts.push_back(declaration());
     }
 
     if (matchToken(TokenType::ELSE)) {
+        consume({TokenType::ELSE});
         if (matchToken(TokenType::LEFT_BRACE)) {
             auto tmpStmts = std::dynamic_pointer_cast<BlockStmt>(blockStmt());
             ifstmt->elseStmts = std::move(tmpStmts->stmts);
         } else {
-            ifstmt->elseStmts.push_back(statement());
+            ifstmt->elseStmts.push_back(declaration());
         }
 
     }
