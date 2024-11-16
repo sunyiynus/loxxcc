@@ -54,7 +54,7 @@ public:
     // 获取节点的唯一 ID，如果尚未分配，则分配一个新 ID
     int getId(AbsStmt* node) {
         if (stmtIds.find(node) == stmtIds.end()) {
-            stmtIds[node] = idCounter++;
+            stmtIds[node] = ++idCounter;
         }
         return stmtIds[node];
     }
@@ -62,7 +62,7 @@ public:
     // 获取节点的唯一 ID，如果尚未分配，则分配一个新 ID
     int getId(AbsExpr* node) {
         if (exprIds.find(node) == exprIds.end()) {
-            exprIds[node] = idCounter++;
+            exprIds[node] = ++idCounter;
         }
         return exprIds[node];
     }
