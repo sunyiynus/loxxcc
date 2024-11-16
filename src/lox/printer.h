@@ -51,7 +51,7 @@ public:
     }
 
     // 获取节点的唯一 ID，如果尚未分配，则分配一个新 ID
-    int getStmtId(AbsStmt* node) {
+    int getId(AbsStmt* node) {
         if (stmtIds.find(node) == stmtIds.end()) {
             stmtIds[node] = idCounter++;
         }
@@ -59,20 +59,49 @@ public:
     }
 
     // 获取节点的唯一 ID，如果尚未分配，则分配一个新 ID
-    int getExprId(AbsExpr* node) {
+    int getId(AbsExpr* node) {
         if (exprIds.find(node) == exprIds.end()) {
             exprIds[node] = idCounter++;
         }
         return exprIds[node];
     }
 
-    void pointTo(const int nodeId, const int p2id) {
-        oss << "  " << nodeId << " -> " << p2id << ";\n";
+    template <typename T, typename T1>
+    void pointTo(T* ptr, T1* ptr1) {
+        oss << "  " << getId(ptr) << " -> " << getId(ptr1) << ";\n";
     }
 
-    void defineNode(const int nodeId, const std::string nodeName, const std::string attr)
-    {
+    void pointTo(const int p, const int t) {
+        oss << "  " << p << " -> " << t << ";\n";
+    }
+
+    void defineNode(const int nodeId, const std::string nodeName, const std::string attr) {
         oss << "  " << nodeId << " [label=\"" << nodeName <<" " << attr << "\"];\n";
+    }
+    template<typename T>
+    int defineNode(T* ptr, const std::string nodeName, const std::string attr = "") {
+        oss << "  " << getId(ptr) << " [label=\"" << nodeName <<" " << attr << "\"];\n";
+        return getId(ptr);
+    }
+
+    int appendNode(int parentId, const std::string nodeName, const std::string attr = "") {
+        auto id = ++idCounter;
+        defineNode(id, nodeName, "");
+        pointTo(parentId, id);
+        return id;
+    }
+
+    template<typename T>
+    int appendNode(T* n, const std::string nodeName, const std::string attr = "") {
+        auto id = getId(n);
+        return appendNode(id, nodeName, attr);
+    }
+
+    void iteralStmts(int rootId, const std::vector<AbsStmt::ptr>& stmts) {
+        for (const auto& stmt : stmts) {
+            stmt->accept(this);
+            pointTo(rootId, getId(stmt.get()));
+        }
     }
 
 private:
