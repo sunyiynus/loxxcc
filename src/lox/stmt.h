@@ -115,6 +115,20 @@ public:
 };
 
 
+class ReturnStmt : public VisitableStmt<ReturnStmt> {
+public: 
+    static ptr create(AbsExpr::ptr expr) {
+        auto res = std::make_shared<ReturnStmt>();
+        res->expression = expr;
+        return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
+    }
+public:
+    AbsExpr::ptr expression;
+public: 
+    using VisitableStmt<ReturnStmt>::accept;
+};
+
+
 template<typename DerivedT, typename PT = AbsStmt, typename VT = InterpreteVisitor>
 using VisitableDecl = Visitable<DerivedT, PT, VT>;
 
@@ -147,20 +161,6 @@ public:
     using VisitableDecl<StmtDecl>::accept;
 };
 
-class ClassDecl : public VisitableDecl<ClassDecl> {
-public:
-    static ptr create(AbsStmt::ptr stmt) {
-        auto res = std::make_shared<StmtDecl>();
-        res->stmt = std::move(stmt);
-        return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
-    }
-public:
-    std::vector<FuncDecl::ptr> functions;
-    Token className;
-public: 
-    using VisitableDecl<ClassDecl>::accept;
-};
-
 
 class FuncDecl : public VisitableDecl<FuncDecl> {
 public:
@@ -177,6 +177,21 @@ public:
     std::vector<AbsStmt::ptr> stmts;
 public: 
     using VisitableDecl<FuncDecl>::accept;
+};
+
+
+class ClassDecl : public VisitableDecl<ClassDecl> {
+public:
+    static ptr create(AbsStmt::ptr stmt) {
+        auto res = std::make_shared<StmtDecl>();
+        res->stmt = std::move(stmt);
+        return std::static_pointer_cast<AbsStmt::ptr::element_type>(res);
+    }
+public:
+    std::vector<FuncDecl::ptr> functions;
+    Token className;
+public: 
+    using VisitableDecl<ClassDecl>::accept;
 };
 #endif // STMT_H
 

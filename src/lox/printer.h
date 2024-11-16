@@ -17,11 +17,18 @@ public:
     AnyResult::ptr visit(LiteralExpr* expr) override;
     AnyResult::ptr visit(Variable* expr) override;
     AnyResult::ptr visit(AssignExpr* expr) override;
+    AnyResult::ptr visit(CallExpr* expr) override;
     AnyResult::ptr visit(PrintStmt* expr) override;
     AnyResult::ptr visit(ExprStmt* expr) override;
     AnyResult::ptr visit(BlockStmt* expr) override;
     AnyResult::ptr visit(VarDecl* expr) override;
     AnyResult::ptr visit(StmtDecl* expr) override;
+    AnyResult::ptr visit(ClassDecl* decl) override;
+    AnyResult::ptr visit(FuncDecl* decl) override;
+    AnyResult::ptr visit(IfStmt* stmt) override;
+    AnyResult::ptr visit(ForStmt* stmt) override;
+    AnyResult::ptr visit(WhileStmt* stmt) override;
+    AnyResult::ptr visit(ReturnStmt* stmt) override;
 
     // 递归遍历节点并生成 DOT 代码
     void execute(std::vector<AbsStmt::ptr> stmts) {
@@ -57,6 +64,15 @@ public:
             exprIds[node] = idCounter++;
         }
         return exprIds[node];
+    }
+
+    void pointTo(const int nodeId, const int p2id) {
+        oss << "  " << nodeId << " -> " << p2id << ";\n";
+    }
+
+    void defineNode(const int nodeId, const std::string nodeName, const std::string attr)
+    {
+        oss << "  " << nodeId << " [label=\"" << nodeName <<" " << attr << "\"];\n";
     }
 
 private:

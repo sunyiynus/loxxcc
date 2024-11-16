@@ -58,6 +58,11 @@ AnyResult::ptr Printer::visit(LiteralExpr* expr)
     return res;
 }
 
+AnyResult::ptr Printer::visit(CallExpr* expr)
+{
+
+}
+
 AnyResult::ptr Printer::visit(Variable* expr)
 {
     AnyResult::ptr res = AnyResult::create();
@@ -86,7 +91,6 @@ AnyResult::ptr Printer::visit(PrintStmt* expr)
     oss << "  " << nodeId << " [label=\"PrintStmt " << "" << "\"];\n";
     auto rightId = getExprId(expr->expression.get());
     oss << "  " << nodeId << " -> " << rightId << ";\n";
-    
     return res;
 }
 
@@ -99,6 +103,17 @@ AnyResult::ptr Printer::visit(ExprStmt* expr)
     auto rightId = getExprId(expr->expression.get());
     oss << "  " << nodeId << " -> " << rightId << ";\n";
     return res;
+}
+
+
+AnyResult::ptr Printer::visit(ReturnStmt* expr)
+{
+    expr->expression->accept(this);
+    auto nodeId = getStmtId(expr);
+    oss << "  " << nodeId << " [label=\"ReturnStmt " << "" << "\"];\n";
+    auto rightId = getExprId(expr->expression.get());
+    oss << "  " << nodeId << " -> " << rightId << ";\n";
+    return nullptr;
 }
 
 
@@ -119,7 +134,6 @@ AnyResult::ptr Printer::visit(BlockStmt* expr)
 AnyResult::ptr Printer::visit(StmtDecl* expr)
 {
     AnyResult::ptr res = expr->stmt->accept(this);
-
     auto nodeId = getStmtId(expr);
     oss << "  " << nodeId << " [label=\"StmtDecl " << "" << "\"];\n";
     auto rightId = getStmtId(expr->stmt.get());
@@ -141,4 +155,86 @@ AnyResult::ptr Printer::visit(VarDecl* expr)
         oss << "  " << nodeId << " [label=\"VarDecl var " << expr->identifier.lexeme << ";\"];\n";
     }
     return res;
+}
+
+AnyResult::ptr Printer::visit(ClassDecl* decl)
+{
+    // auto nodeId = getStmtId(expr);
+    // oss << "  " << nodeId << " [label=\"ReturnStmt " << "" << "\"];\n";
+    // auto rightId = getExprId(expr->expression.get());
+    // oss << "  " << nodeId << " -> " << rightId << ";\n";
+}
+
+AnyResult::ptr Printer::visit(FuncDecl* decl)
+{
+    auto nodeId = getStmtId(decl);
+    oss << "  " << nodeId << " [label=\"FuncDecl " << decl->funcName.lexeme << "\"];\n";
+    for (const auto& stmt : decl->stmts) {
+        stmt->accept(this);
+        auto rightId = getStmtId(stmt.get());
+        oss << "  " << nodeId << " -> " << rightId << ";\n";
+    }
+    return nullptr;
+}
+
+AnyResult::ptr Printer::visit(IfStmt* stmt)
+{
+    defineNode(getStmtId(stmt), "IfStmt", "");
+    stmt->checkExpression->accept(this);
+    auto nodeId = getStmtId(stmt);
+    pointTo(nodeId, getExprId(stmt->checkExpression.get()));
+
+    auto tureNode = ++idCounter;
+    auto falseNode = ++idCounter;
+    pointTo(nodeId, tureNode);
+    defineNode(tureNode, "TrueStmts", "");
+    defineNode(falseNode, "FalseStmts", "");
+
+    for (const auto& stmt : stmt->trueStmts) {
+        stmt->accept(this);
+        pointTo(tureNode, getStmtId(stmt.get()));
+    }
+
+    for (const auto& stmt : stmt->elseStmts) {
+        stmt->accept(this);
+        pointTo(falseNode, getStmtId(stmt.get()));
+    }
+    return nullptr;
+}
+
+
+AnyResult::ptr Printer::visit(ForStmt* stmt)
+{
+    defineNode(getStmtId(stmt), "ForStmt", "");
+    auto nodeId = getStmtId(stmt);
+    stmt->initializationStmt->accept(this);
+    stmt->conditionExpr->accept(this);
+    stmt->updateStmt->accept(this);
+    pointTo(nodeId, getStmtId(stmt->initializationStmt.get()));
+    pointTo(nodeId, getExprId(stmt->conditionExpr.get()));
+    pointTo(nodeId, getStmtId(stmt->updateStmt.get()));
+    auto stmtsNode = ++idCounter;
+    defineNode(stmtsNode, "Stmts", "");
+    pointTo(nodeId, stmtsNode);
+    for (const auto& stmt : stmt->stmts) {
+        stmt->accept(this);
+        pointTo(stmtsNode, getStmtId(stmt.get()));
+    }
+    return nullptr;
+}
+
+
+AnyResult::ptr Printer::visit(WhileStmt* stmt)
+{
+    auto nodeId = getStmtId(stmt);
+    defineNode(nodeId, "WhileStmt", "");
+    stmt->condition->accept(this);
+    pointTo(nodeId, getExprId(stmt->condition.get()));
+    auto stmtsNode = ++idCounter;
+    defineNode(stmtsNode, "Stmts", "");
+    pointTo(nodeId, stmtsNode);
+    for (const auto& stmt : stmt->stmts) {
+        stmt->accept(this);
+        pointTo(stmtsNode, getStmtId(stmt.get()));
+    }
 }

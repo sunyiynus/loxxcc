@@ -94,3 +94,18 @@ TEST_F(ParserTestScaffold, evaluate_parser_test) {
     // ASSERT_EQ(oss.str(), "a\nb\nc\n") << oss.str();
     
 }
+
+
+TEST_F(ParserTestScaffold, evaluate_parser_if_stmt_test_if_lox) {
+    auto filePath = Utility::PathJoin({g_loxSourceDir, "test/lox/if/if.lox"});
+    loadLoxCodeFromFile(filePath);
+    ASSERT_GT(tokens.size(), 20);
+    ASSERT_TRUE(parser.atEnd());
+    astprinter.execute(stmts);
+    writeToDotFile(astprinter.generateDot());
+    // interpreter.interprete(stmts);
+    // ASSERT_FALSE(oss.str().empty());
+    // std::cout << oss.str();
+    // ASSERT_EQ(oss.str(), "a\nb\nc\n") << oss.str();
+    
+}

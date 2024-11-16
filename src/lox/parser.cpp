@@ -139,6 +139,12 @@ AbsExpr::ptr Parser::primary()
          return res;
     }
 
+    if (matchTokens({TokenType::TRUE, TokenType::FALSE})) {
+        auto res = LiteralExpr::create(current());
+        advance();
+        return res;
+    }
+
     if (matchTokens({TokenType::LEFT_PAREN})) {
         advance();
         auto expr = expression();
@@ -240,9 +246,9 @@ AbsStmt::ptr Parser::declaration()
             consume({TokenType::FUNC});
             return funcDecl();
         }
-        if (matchTokens({TokenType::CLASS})) {
-            return classDecl();
-        }
+        // if (matchTokens({TokenType::CLASS})) {
+        //     return classDecl();
+        // }
         return statement();
     } catch (const std::exception& e) {
         synchronize();
@@ -332,6 +338,18 @@ AbsStmt::ptr Parser::statement()
     }
     res = exprStmt();
     return StmtDecl::create(res);
+}
+
+AbsStmt::ptr Parser::classDecl()
+{
+    consume({TokenType::CLASS});
+    Token className = current();
+    advance();
+    auto classStmt = std::make_shared<ClassDecl>();
+    while (!atEnd() && matchToken(TokenType::LESS)) {
+        consume({TokenType::LESS});
+        
+    }
 }
 
 AbsStmt::ptr Parser::varDecl()

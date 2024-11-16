@@ -222,6 +222,11 @@ AnyResult::ptr Interpreter::visit(LiteralExpr* expr)
 }
 
 
+AnyResult::ptr Interpreter::visit(CallExpr* expr)
+{
+}
+
+
 AnyResult::ptr Interpreter::visit(Variable* expr)
 {
     AnyResult::ptr res;
@@ -293,3 +298,37 @@ AnyResult::ptr Interpreter::visit(StmtDecl* expr)
 {
     return expr->stmt->accept(this);
 }
+
+AnyResult::ptr Interpreter::visit(ClassDecl* decl)
+{
+
+}
+
+AnyResult::ptr Interpreter::visit(FuncDecl* decl)
+{
+
+}
+
+AnyResult::ptr Interpreter::visit(IfStmt* stmt)
+{
+
+}
+
+
+AnyResult::ptr Interpreter::visit(ForStmt* stmt)
+{
+
+}
+
+
+AnyResult::ptr Interpreter::visit(WhileStmt* stmt)
+{
+
+}
+
+
+AnyResult::ptr Interpreter::visit(ReturnStmt* stmt)
+{
+
+}
+

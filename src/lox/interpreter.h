@@ -55,11 +55,18 @@ public:
     AnyResult::ptr visit(LiteralExpr* expr) override;
     AnyResult::ptr visit(Variable* expr) override;
     AnyResult::ptr visit(AssignExpr* expr) override;
+    AnyResult::ptr visit(CallExpr* expr) override;
     AnyResult::ptr visit(PrintStmt* expr) override;
     AnyResult::ptr visit(ExprStmt* expr) override;
     AnyResult::ptr visit(BlockStmt* expr) override;
     AnyResult::ptr visit(VarDecl* expr) override;
     AnyResult::ptr visit(StmtDecl* expr) override;
+    AnyResult::ptr visit(ClassDecl* decl) override;
+    AnyResult::ptr visit(FuncDecl* decl) override;
+    AnyResult::ptr visit(IfStmt* stmt) override;
+    AnyResult::ptr visit(ForStmt* stmt) override;
+    AnyResult::ptr visit(WhileStmt* stmt) override;
+    AnyResult::ptr visit(ReturnStmt* stmt) override;
 };
 
 
