@@ -138,3 +138,18 @@ TEST_F(ParserTestScaffold, evaluate_parser_if_stmt_test_var_in_then_lox) {
     // ASSERT_EQ(oss.str(), "a\nb\nc\n") << oss.str();
     
 }
+
+TEST_F(ParserTestScaffold, evaluate_parser_if_stmt_test_break_continue_lox) {
+    const std::string srcFile = "test/lox/for/break_continue.lox";
+    auto filePath = Utility::PathJoin({g_loxSourceDir, srcFile});
+    loadLoxCodeFromFile(filePath);
+    ASSERT_GT(tokens.size(), 2);
+    ASSERT_TRUE(parser.atEnd());
+    astprinter.execute(stmts);
+    writeToDotFile(astprinter.generateDot(srcFile));
+    // interpreter.interprete(stmts);
+    // ASSERT_FALSE(oss.str().empty());
+    // std::cout << oss.str();
+    // ASSERT_EQ(oss.str(), "a\nb\nc\n") << oss.str();
+    
+}

@@ -153,12 +153,13 @@ AnyResult::ptr Printer::visit(IfStmt* stmt)
 }
 
 
+
 AnyResult::ptr Printer::visit(ForStmt* stmt)
 {
     defineNode(stmt, "ForStmt", "");
-    stmt->initializationStmt->accept(this);
-    stmt->conditionExpr->accept(this);
-    stmt->updateStmt->accept(this);
+    callAccept(stmt->initializationStmt);
+    callAccept(stmt->conditionExpr);
+    callAccept(stmt->updateStmt);
     pointTo(stmt, stmt->initializationStmt.get());
     pointTo(stmt, stmt->conditionExpr.get());
     pointTo(stmt, stmt->updateStmt.get());

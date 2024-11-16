@@ -70,7 +70,9 @@ public:
 
     template <typename T, typename T1>
     void pointTo(T* ptr, T1* ptr1) {
-        oss << "  " << getId(ptr) << " -> " << getId(ptr1) << ";\n";
+        if (ptr && ptr1) {
+            oss << "  " << getId(ptr) << " -> " << getId(ptr1) << ";\n";
+        }
     }
 
     void pointTo(const int p, const int t) {
@@ -101,9 +103,19 @@ public:
 
     void iteralStmts(int rootId, const std::vector<AbsStmt::ptr>& stmts) {
         for (const auto& stmt : stmts) {
-            stmt->accept(this);
-            pointTo(rootId, getId(stmt.get()));
+            if (stmt) {
+                stmt->accept(this);
+                pointTo(rootId, getId(stmt.get()));
+            }
         }
+    }
+
+    template<typename T>
+    AnyResult::ptr callAccept(std::shared_ptr<T> ptr) {
+        if (ptr) {
+            return ptr->accept(this);
+        }
+        return nullptr;
     }
 
 private:

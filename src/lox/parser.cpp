@@ -291,10 +291,10 @@ AbsStmt::ptr Parser::forStmt()
     consume({TokenType::FOR});
     consume({TokenType::LEFT_PAREN});
     auto forstmt = std::make_shared<ForStmt>();
-    forstmt->initializationStmt = statement();
+    forstmt->initializationStmt = declaration();
     forstmt->conditionExpr = expression();
     consume({TokenType::SEMICOM});
-    forstmt->updateStmt = statement();
+    forstmt->updateStmt = declaration();
     consume({TokenType::RIGHT_PAREN});
     if (matchToken(TokenType::LEFT_BRACE)) {
         forstmt->stmts = std::move(std::dynamic_pointer_cast<BlockStmt>(blockStmt())->stmts); 
