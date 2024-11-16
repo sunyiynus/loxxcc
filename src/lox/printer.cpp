@@ -43,7 +43,7 @@ AnyResult::ptr Printer::visit(GroupExpr* expr)
 AnyResult::ptr Printer::visit(LiteralExpr* expr)
 {
     AnyResult::ptr res = AnyResult::create();
-    defineNode(expr, "LiteralExpr");
+    defineNode(expr, "LiteralExpr", expr->literal.lexeme);
     return res;
 }
 
