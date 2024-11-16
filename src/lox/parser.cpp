@@ -53,6 +53,7 @@ bool Parser::matchToken(const TokenType tktype)
 void Parser::advance()
 {
     curItr++;
+    itrIdx = std::distance(tokensSeq.begin(), curItr);
 }
 
 
@@ -298,6 +299,8 @@ AbsStmt::ptr Parser::forStmt()
     consume({TokenType::RIGHT_PAREN});
     if (matchToken(TokenType::LEFT_BRACE)) {
         forstmt->stmts = std::move(std::dynamic_pointer_cast<BlockStmt>(blockStmt())->stmts); 
+    } else {
+        
     }
     return forstmt;
 }
@@ -312,6 +315,8 @@ AbsStmt::ptr Parser::whileStmt()
     consume({TokenType::RIGHT_PAREN});
     if (matchToken(TokenType::LEFT_BRACE)) {
         whilestmt->stmts = std::move(std::dynamic_pointer_cast<BlockStmt>(blockStmt())->stmts);
+    } else {
+        whilestmt->stmts.push_back(declaration());
     }
     return whilestmt;
 }

@@ -34,7 +34,7 @@ private:
     std::string srcFileName;
     std::string::size_type tail;
     std::string::size_type head;
-    std::uint64_t currenLine;
+    std::uint64_t currenLine = 1;
     Tokens tokens;
 };
 

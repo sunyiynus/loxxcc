@@ -71,6 +71,7 @@ public:
 private:
     Tokens tokensSeq;
     Tokens::iterator curItr;
+    uint64_t itrIdx = 0;
 };
 
 #endif // PARSER_H

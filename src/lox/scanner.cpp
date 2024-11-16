@@ -254,6 +254,7 @@ void Scanner::comments()
     while (current() != SingleCharactor::NewLine) {
         advanceHead();
     }
+    currenLine++;
     advanceHead(); // next line,
     advance();
 }
