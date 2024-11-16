@@ -41,10 +41,11 @@ public:
     }
 
     // 生成 DOT 表示的入口函数
-    std::string generateDot() {
+    std::string generateDot(const std::string file = "") {
         std::ostringstream tmposs;
         tmposs << "digraph AST {\n";
         tmposs << "  node [shape=records];\n";
+        tmposs << "name[label=\"" << file << "\"];\n";
         tmposs << oss.str();
         tmposs << "}\n";
         return tmposs.str();

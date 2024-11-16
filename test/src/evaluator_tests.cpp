@@ -82,12 +82,12 @@ TEST_F(ParserTestScaffold, evaluate_associativity) {
 
 
 TEST_F(ParserTestScaffold, evaluate_parser_test) {
-    auto filePath = Utility::PathJoin({g_loxSourceDir, "test", "lox", "parser_test.lox"});
+    auto filePath = Utility::PathJoin({g_loxSourceDir, "test/lox/parser_test.lox"});
     loadLoxCodeFromFile(filePath);
     ASSERT_GT(tokens.size(), 20);
     ASSERT_TRUE(parser.atEnd());
     astprinter.execute(stmts);
-    writeToDotFile(astprinter.generateDot());
+    writeToDotFile(astprinter.generateDot("test/lox/parser_test.lox"));
     interpreter.interprete(stmts);
     ASSERT_FALSE(oss.str().empty());
     std::cout << oss.str();
@@ -102,7 +102,21 @@ TEST_F(ParserTestScaffold, evaluate_parser_if_stmt_test_if_lox) {
     ASSERT_GT(tokens.size(), 20);
     ASSERT_TRUE(parser.atEnd());
     astprinter.execute(stmts);
-    writeToDotFile(astprinter.generateDot());
+    writeToDotFile(astprinter.generateDot("test/lox/if/if.lox"));
+    // interpreter.interprete(stmts);
+    // ASSERT_FALSE(oss.str().empty());
+    // std::cout << oss.str();
+    // ASSERT_EQ(oss.str(), "a\nb\nc\n") << oss.str();
+    
+}
+
+TEST_F(ParserTestScaffold, evaluate_parser_if_stmt_test_var_in_else_lox) {
+    auto filePath = Utility::PathJoin({g_loxSourceDir, "test/lox/if/var_in_else.lox"});
+    loadLoxCodeFromFile(filePath);
+    ASSERT_GT(tokens.size(), 2);
+    ASSERT_TRUE(parser.atEnd());
+    astprinter.execute(stmts);
+    writeToDotFile(astprinter.generateDot("test/lox/if/var_in_else.lox"));
     // interpreter.interprete(stmts);
     // ASSERT_FALSE(oss.str().empty());
     // std::cout << oss.str();
