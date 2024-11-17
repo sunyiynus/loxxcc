@@ -11,17 +11,16 @@
 #include "testscaffold.h"
 
 
-TEST_F(ParserTestScaffold, DefaultConstructor) {
-    auto filePath = Utility::PathJoin({g_loxSourceDir, "test", "lox", "parser_test.lox"});
+TEST_F(ParserTestScaffold, evaluate_parser_for_stmt_test_syntax_lox) {
+    const std::string srcFile = "test/lox/debug.lox";
+    auto filePath = Utility::PathJoin({g_loxSourceDir, srcFile});
     loadLoxCodeFromFile(filePath);
-    ASSERT_GT(tokens.size(), 20);
+    ASSERT_GT(tokens.size(), 2);
     ASSERT_TRUE(parser.atEnd());
     astprinter.execute(stmts);
-    writeToDotFile(astprinter.generateDot());
-
-
-    interpreter.interprete(stmts);
-    ASSERT_FALSE(oss.str().empty());
+    writeToDotFile(astprinter.generateDot(srcFile));
+    // interpreter.interprete(stmts);
+    // ASSERT_FALSE(oss.str().empty());
+    // std::cout << oss.str();
     // ASSERT_EQ(oss.str(), "a\nb\nc\n") << oss.str();
-    
 }

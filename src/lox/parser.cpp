@@ -178,8 +178,11 @@ AbsExpr::ptr Parser::assignExpr()
 AbsExpr::ptr Parser::finishCall(AbsExpr::ptr expr)
 {
     consume({TokenType::LEFT_PAREN});
-    std::vector<AbsExpr::ptr> args = arguments();
+    std::vector<AbsExpr::ptr> args;
     auto identifier = std::dynamic_pointer_cast<Variable>(expr);
+    if (!matchToken(TokenType::RIGHT_PAREN)) {
+        args = arguments();
+    }
     consume({TokenType::RIGHT_PAREN});
     return CallExpr::create(expr, identifier->literal, args);
 }

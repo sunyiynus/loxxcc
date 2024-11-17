@@ -48,8 +48,9 @@ AnyResult::ptr Printer::visit(LiteralExpr* expr)
 }
 
 AnyResult::ptr Printer::visit(CallExpr* expr)
-{
-
+{   
+    defineNode(expr, "func", expr->identifier.lexeme);
+    return nullptr;
 }
 
 AnyResult::ptr Printer::visit(Variable* expr)
@@ -98,18 +99,21 @@ AnyResult::ptr Printer::visit(ReturnStmt* expr)
 
 AnyResult::ptr Printer::visit(BlockStmt* expr)
 {
-    AnyResult::ptr res = AnyResult::create();
-    auto id = defineNode(expr, "BlockStmt");
+    // auto id = defineNode(expr, "BlockStmt");
+    auto id = getId(expr);
     iteralStmts(id, expr->stmts);
-    return res;
+    return nullptr;
 }
 
 
 AnyResult::ptr Printer::visit(StmtDecl* expr)
 {
-    AnyResult::ptr res = expr->stmt->accept(this);
+    AnyResult::ptr res;
     defineNode(expr, "StmtDecl");
-    pointTo(expr, expr->stmt.get());
+    if (expr->stmt) {
+        res = expr->stmt->accept(this);
+        pointTo(expr, expr->stmt.get());
+    }
     return res;
 }
 
@@ -134,6 +138,9 @@ AnyResult::ptr Printer::visit(ClassDecl* decl)
 
 AnyResult::ptr Printer::visit(FuncDecl* decl)
 {
+    if (!decl) {
+        return nullptr;
+    }
     defineNode(decl, "FuncDecl" , decl->funcName.lexeme);
     auto nodeId = appendNode(decl, "Stmts");
     iteralStmts(nodeId, decl->stmts);
