@@ -80,7 +80,7 @@ public:
 
 class ForStmt : public VisitableStmt<ForStmt> {
 public: 
-    static ptr create(AbsStmt::ptr init, AbsExpr::ptr cond, AbsStmt::ptr update, std::vector<AbsStmt::ptr> stmts) {
+    static ptr create(AbsStmt::ptr init, AbsExpr::ptr cond, AbsExpr::ptr update, std::vector<AbsStmt::ptr> stmts) {
         auto res = std::make_shared<ForStmt>();
         res->initializationStmt = init;
         res->conditionExpr = cond;
@@ -91,7 +91,7 @@ public:
 public:
     AbsStmt::ptr initializationStmt;
     AbsExpr::ptr conditionExpr;
-    AbsStmt::ptr updateStmt;
+    AbsExpr::ptr updateStmt;
     std::vector<AbsStmt::ptr> stmts;
 public: 
     using VisitableStmt<ForStmt>::accept;

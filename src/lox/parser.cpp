@@ -153,8 +153,8 @@ AbsExpr::ptr Parser::primary()
         auto res = GroupExpr::create(expr);
         return res;
     }
-    bad_grammar bg("error at ");
-    throw bg;
+    // bad_grammar bg("error at ");
+    // throw bg;
     return nullptr;
 }
 
@@ -244,7 +244,6 @@ AbsStmt::ptr Parser::declaration()
             return varDecl();
         }
         if (matchTokens({TokenType::FUNC})) {
-            consume({TokenType::FUNC});
             return funcDecl();
         }
         // if (matchTokens({TokenType::CLASS})) {
@@ -292,15 +291,23 @@ AbsStmt::ptr Parser::forStmt()
     consume({TokenType::FOR});
     consume({TokenType::LEFT_PAREN});
     auto forstmt = std::make_shared<ForStmt>();
-    forstmt->initializationStmt = declaration();
-    forstmt->conditionExpr = expression();
+    if (!matchToken(TokenType::SEMICOM)) {
+        forstmt->initializationStmt = declaration();
+    } else {
+        consume({TokenType::SEMICOM});
+    }
+    if (!matchToken(TokenType::SEMICOM)) {
+        forstmt->conditionExpr = expression();
+    }
     consume({TokenType::SEMICOM});
-    forstmt->updateStmt = declaration();
+    if (!matchToken(TokenType::RIGHT_PAREN)) {
+        forstmt->updateStmt = expression();
+    }
     consume({TokenType::RIGHT_PAREN});
     if (matchToken(TokenType::LEFT_BRACE)) {
         forstmt->stmts = std::move(std::dynamic_pointer_cast<BlockStmt>(blockStmt())->stmts); 
     } else {
-        
+        forstmt->stmts.push_back(statement());
     }
     return forstmt;
 }
@@ -321,6 +328,14 @@ AbsStmt::ptr Parser::whileStmt()
     return whilestmt;
 }
 
+AbsStmt::ptr Parser::retStmt()
+{
+    consume({TokenType::RETURN});
+    auto rstmt = std::make_shared<ReturnStmt>();
+    rstmt->expression = expression();
+    consume({TokenType::SEMICOM});
+    return rstmt;
+}
 
 AbsStmt::ptr Parser::statement()
 {
@@ -341,6 +356,9 @@ AbsStmt::ptr Parser::statement()
     }
     if (matchTokens({TokenType::WHILE})) {
         return whileStmt();
+    }
+    if (matchToken(TokenType::RETURN)) {
+        return retStmt();
     }
     res = exprStmt();
     return StmtDecl::create(res);
@@ -375,18 +393,22 @@ AbsStmt::ptr Parser::varDecl()
 
 AbsStmt::ptr Parser::funcDecl()
 {
-    auto identifier = current();
+    auto funcPtr = std::make_shared<FuncDecl>();
+    consume({TokenType::FUNC});
+    funcPtr->funcName = current();
     advance();
     consume({TokenType::LEFT_PAREN});
-    auto tks = parameter();
+    if (!matchToken(TokenType::RIGHT_PAREN)) {
+        funcPtr->parameter = parameter();
+    }
     consume({TokenType::RIGHT_PAREN});
     auto stmts = blockStmt();
     auto tmpStmts = std::dynamic_pointer_cast<BlockStmt>(stmts);
     if (tmpStmts) {
-        auto funcStmts = std::move(tmpStmts->stmts);
-        return FuncDecl::create(identifier, tks, funcStmts);
+        funcPtr->stmts = std::move(tmpStmts->stmts);
     }
-    return nullptr;
+    
+    return funcPtr;
 }
 
 Tokens Parser::parameter()

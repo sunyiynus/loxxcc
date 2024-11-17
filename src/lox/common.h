@@ -95,7 +95,7 @@ namespace SingleCharactor
 namespace Keywords
 {
     const std::string Class    = "class";
-    const std::string Func     = "fn";
+    const std::string Func     = "fun";
     const std::string Nil      = "nil";
     const std::string Return   = "return";
     const std::string Print    = "print";

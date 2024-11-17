@@ -49,6 +49,7 @@ public:
     AbsStmt::ptr funcDecl();
     AbsStmt::ptr classDecl();
     AbsStmt::ptr whileStmt();
+    AbsStmt::ptr retStmt();
     Tokens parameter();
     std::vector<AbsExpr::ptr> arguments();
     AbsExpr::ptr call();
