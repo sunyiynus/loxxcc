@@ -31,10 +31,15 @@ public:
     // 递归遍历节点并生成 DOT 代码
     void execute(std::vector<AbsStmt::ptr> stmts) {
         if (stmts.empty()) return;
+        int cnt = 0;
         for (const auto& stmt : stmts) {
+            oss.get() << "subgraph cluster_" << std::to_string(cnt) << " {\n";
+            oss.get() << "label=\"" << std::to_string(cnt) <<"\";\n";
             if (stmt) {
                 stmt->accept(this);
             }
+            oss.get() << "}\n";
+            cnt++;
         }
     }
 

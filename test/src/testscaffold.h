@@ -74,11 +74,10 @@ protected:
     std::string generateDot(const std::string file = "") {
         std::ostringstream tmposs;
         tmposs << "digraph AST {\n";
-        tmposs << "subgraph cluster_A {\n";
-        tmposs << "  label=\"" << file <<"\";\n";
+        tmposs << "label=\"" << file <<"\";\n";
         tmposs << "  node [shape=records];\n";
         tmposs << oss.str();
-        tmposs << "}\n}\n";
+        tmposs << "}\n";
         return tmposs.str();
     }
 
