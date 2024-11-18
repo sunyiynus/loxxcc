@@ -5,15 +5,15 @@ class Pet {
 }
 
 class Dog < Pet {
-    fn inDog() {
+    inDog() {
         return this;
     }
 
-    fn feeding(food) {
+    feeding(food) {
         print "eating " food;
     }
 
-    fn wooh() {
+    wooh() {
         print "wooh";
     }
 

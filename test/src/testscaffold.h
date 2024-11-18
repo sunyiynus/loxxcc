@@ -20,13 +20,16 @@ protected:
     Printer astprinter;
     Interpreter interpreter;
     std::ostringstream oss;
-
+    std::ostringstream ossExec;
     std::string runtimeDir;
+
+    std::string loxFilePath;
 
     void SetUp() override {
         // Initialize tokens or other necessary setup before each test case
         interpreter.setOutput(std::reference_wrapper<std::ostream>(oss));
         runtimeDir = Utility::PathJoin({g_loxSourceDir, "bin"});
+        setOstreamToBuffer();
 
     }
 
@@ -34,8 +37,15 @@ protected:
         return Token(lexeme, lexeme, 0, type);
     }
 
+    void setOstreamToBuffer() {
+        astprinter.setOstream(oss);
+        interpreter.setOutput(ossExec);
+    }
+
     void loadLoxCodeFromFile(const std::string path) {
-        std::string srcCode = Utility::ReadFile(path);
+        loxFilePath = path;
+        auto filePath = Utility::PathJoin({g_loxSourceDir, path});
+        std::string srcCode = Utility::ReadFile(filePath);
         Scanner lexer(srcCode);
         tokens = lexer.scanTokens();
         parser = Parser(tokens);
@@ -61,7 +71,20 @@ protected:
         return fileName;
     }
 
-    bool writeToDotFile(const std::string& content) {
+    std::string generateDot(const std::string file = "") {
+        std::ostringstream tmposs;
+        tmposs << "digraph AST {\n";
+        tmposs << "subgraph cluster_A {\n";
+        tmposs << "  label=\"" << file <<"\";\n";
+        tmposs << "  node [shape=records];\n";
+        tmposs << oss.str();
+        tmposs << "}\n}\n";
+        return tmposs.str();
+    }
+
+    bool writeToDotFile() {
+
+        auto content = generateDot(loxFilePath);
         // 打开文件输出流
         std::string filePath = runtimeDir + "/dot/" + generateRandomDotFileName();
         std::ofstream outFile(filePath);

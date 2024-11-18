@@ -13,12 +13,11 @@
 
 TEST_F(ParserTestScaffold, evaluate_parser_for_stmt_test_syntax_lox) {
     const std::string srcFile = "test/lox/debug.lox";
-    auto filePath = Utility::PathJoin({g_loxSourceDir, srcFile});
-    loadLoxCodeFromFile(filePath);
+    loadLoxCodeFromFile(srcFile);
     ASSERT_GT(tokens.size(), 2);
     ASSERT_TRUE(parser.atEnd());
     astprinter.execute(stmts);
-    writeToDotFile(astprinter.generateDot(srcFile));
+    writeToDotFile();
     // interpreter.interprete(stmts);
     // ASSERT_FALSE(oss.str().empty());
     // std::cout << oss.str();

@@ -1,11 +1,6 @@
 #include "printer.h"
 #include <memory>
 
-void Printer::setOutput(std::ostream& out)
-{
-    output = std::reference_wrapper<std::ostream>(out);
-}
-
 AnyResult::ptr Printer::visit(BinaryExpr* expr)
 {
     AnyResult::ptr res = AnyResult::create();
@@ -90,9 +85,11 @@ AnyResult::ptr Printer::visit(ExprStmt* expr)
 
 AnyResult::ptr Printer::visit(ReturnStmt* expr)
 {
-    expr->expression->accept(this);
     defineNode(expr, "ReturnStmt");
-    pointTo(expr, expr->expression.get());
+    if (expr->expression) {
+        expr->expression->accept(this);
+        pointTo(expr, expr->expression.get());
+    }
     return nullptr;
 }
 
