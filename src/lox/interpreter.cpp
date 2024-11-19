@@ -89,11 +89,13 @@ void Interpreter::setOutput(std::ostream& out)
 
 void Interpreter::interprete(const std::vector<AbsStmt::ptr>& stmts)
 {
+    scopedEnvChain = std::make_shared<Environment>(scopedEnvChain);
     for (const auto& stmt: stmts) {
         if (stmt){
             execute(stmt);
         }
     }
+    scopedEnvChain = scopedEnvChain->parentEnv;
 }
 
 void Interpreter::execute(AbsStmt::ptr stmt)
@@ -311,24 +313,33 @@ AnyResult::ptr Interpreter::visit(FuncDecl* decl)
 
 AnyResult::ptr Interpreter::visit(IfStmt* stmt)
 {
-
+    if (evaluate(stmt->checkExpression)) {
+        interprete(stmt->trueStmts);
+    } else {
+        interprete(stmt->elseStmts);
+    }
 }
 
 
 AnyResult::ptr Interpreter::visit(ForStmt* stmt)
 {
-
+    stmt->initializationStmt->accept(this);
+    while (evaluate(stmt->conditionExpr)) {
+        interprete(stmt->stmts);
+        evaluate(stmt->updateStmt);
+    }
 }
 
 
 AnyResult::ptr Interpreter::visit(WhileStmt* stmt)
 {
-
+    while (evaluate(stmt->condition)) {
+        interprete(stmt->stmts);
+    }
 }
 
 
 AnyResult::ptr Interpreter::visit(ReturnStmt* stmt)
 {
-
 }
 

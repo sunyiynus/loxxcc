@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include <limits>
 #include "any.h"
 #include "types.h"
 
@@ -20,6 +21,11 @@ enum class prim_type {
     Number, LongInt, String, Boolean, Callable, Nil
 };
 
+static inline bool double2bool(const number val)
+{
+    return (std::abs(val) > std::numeric_limits<number>::epsilon()) ? true : false;
+}
+
 struct AnyResult: public add_create_func<AnyResult> {
     AnyResult() : type(prim_type::Nil) {}
     AnyResult(const AnyResult& ) = default;
@@ -29,6 +35,7 @@ struct AnyResult: public add_create_func<AnyResult> {
     prim_type type;
     std::string resultStr;
     Any value;
+
     explicit operator std::string() {
         std::string res;
         switch (type)
@@ -50,6 +57,33 @@ struct AnyResult: public add_create_func<AnyResult> {
             break;
         case prim_type::Nil:
             res = "nil";
+        default:
+            break;
+        }
+        return res;
+    }
+
+    operator bool() {
+        bool res = false;
+        switch (type)
+        {
+        case prim_type::Number:
+            res = double2bool(value.get<number>());
+            break;
+        case prim_type::LongInt:
+            res = value.get<long int>();
+            break;
+        case prim_type::String:
+            res = !value.get<std::string>().empty();
+            break;
+        case prim_type::Boolean:
+            res = value.get<bool>();
+            break;
+        case prim_type::Callable:
+            res = true;
+            break;
+        case prim_type::Nil:
+            res = false;
         default:
             break;
         }
