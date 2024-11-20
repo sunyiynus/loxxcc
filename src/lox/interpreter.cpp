@@ -103,6 +103,15 @@ void Interpreter::execute(AbsStmt::ptr stmt)
     stmt->accept(this);
 }
 
+void Interpreter::execute(std::vector<AbsStmt::ptr>& stmts, std::shared_ptr<Environment> environment)
+{
+    auto tmpEnv = scopedEnvChain;
+    scopedEnvChain = environment;
+    interprete(stmts);
+    scopedEnvChain = tmpEnv;
+}
+
+
 AnyResult::ptr Interpreter::evaluate(AbsExpr::ptr expr)
 {
     return expr->accept(this);
@@ -226,6 +235,10 @@ AnyResult::ptr Interpreter::visit(LiteralExpr* expr)
 
 AnyResult::ptr Interpreter::visit(CallExpr* expr)
 {
+    auto res = findSymbol(expr->identifier.lexeme);
+    if (res->value.get<LoxFunction>()) {
+        
+    }
 }
 
 
@@ -267,12 +280,7 @@ AnyResult::ptr Interpreter::visit(PrintStmt* expr)
 
 AnyResult::ptr Interpreter::visit(BlockStmt* expr)
 {
-    auto blkEnv = std::make_shared<Environment>(scopedEnvChain);
-    scopedEnvChain = blkEnv;
-    for (const auto& stmt : expr->stmts) {
-        execute(stmt);
-    }
-    scopedEnvChain = blkEnv->parentEnv;
+    interprete(expr->stmts);
     return nullptr;
 }
 

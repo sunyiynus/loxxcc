@@ -40,13 +40,16 @@ private:
     std::shared_ptr<Environment> scopedEnvChain;
     std::shared_ptr<Environment> globalEnv;
     std::reference_wrapper<std::ostream> output;
-public: 
+public:
+    std::shared_ptr<Environment> globalEnvironment() const { return globalEnv; }
+public:
     Interpreter(): scopedEnvChain(std::make_shared<Environment>()), 
                     globalEnv(scopedEnvChain), output(std::cout) {}
     void setOutput(std::ostream& out);
 public:
     void interprete(const std::vector<AbsStmt::ptr>& stmts);
     void execute(AbsStmt::ptr stmt);
+    void execute(std::vector<AbsStmt::ptr>& stmts, std::shared_ptr<Environment> environment);
     AnyResult::ptr findSymbol(const std::string& symbol);
     AnyResult::ptr evaluate(AbsExpr::ptr expr);
     AnyResult::ptr visit(BinaryExpr* expr) override;

@@ -177,6 +177,7 @@ public:
     std::vector<AbsStmt::ptr> stmts;
 public: 
     using VisitableDecl<FuncDecl>::accept;
+    using ptr = std::shared_ptr<FuncDecl>;
 };
 
 
