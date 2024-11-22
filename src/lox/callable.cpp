@@ -10,9 +10,15 @@ AnyResult::ptr LoxFunction::call(Interpreter* ptr , std::vector<AnyResult::ptr> 
         environment->define(declaration->parameter[i].lexeme,  args[i]);
     }
 
-    ptr->execute(declaration->stmts, environment);
+    auto res = ptr->execute(declaration->stmts, environment);
+    return res;
 }
 
 uint64_t LoxFunction::arity() const {
     return declaration->parameter.size();
+}
+
+LoxFunction::operator std::string()
+{
+    return declaration->funcName.lexeme;
 }

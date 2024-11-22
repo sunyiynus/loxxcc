@@ -5,6 +5,7 @@
 #include "errors.h"
 #include "Utility.h"
 #include "visitor_instance.h"
+#include "callable.h"
 
 
 
@@ -103,12 +104,18 @@ void Interpreter::execute(AbsStmt::ptr stmt)
     stmt->accept(this);
 }
 
-void Interpreter::execute(std::vector<AbsStmt::ptr>& stmts, std::shared_ptr<Environment> environment)
+AnyResult::ptr Interpreter::execute(std::vector<AbsStmt::ptr>& stmts, std::shared_ptr<Environment> environment)
 {
     auto tmpEnv = scopedEnvChain;
     scopedEnvChain = environment;
-    interprete(stmts);
+    AnyResult::ptr tmpVal;
+    try {
+        interprete(stmts);
+    } catch (RetPortGun& ret) {
+        tmpVal = ret.returnValue;
+    }
     scopedEnvChain = tmpEnv;
+    return tmpVal;
 }
 
 
@@ -236,6 +243,7 @@ AnyResult::ptr Interpreter::visit(LiteralExpr* expr)
 AnyResult::ptr Interpreter::visit(CallExpr* expr)
 {
     auto res = findSymbol(expr->identifier.lexeme);
+    if (res->type != res)
     if (res->value.get<LoxFunction>()) {
         
     }
@@ -316,6 +324,9 @@ AnyResult::ptr Interpreter::visit(ClassDecl* decl)
 
 AnyResult::ptr Interpreter::visit(FuncDecl* decl)
 {
+    auto func = AnyResult::create();
+    func->type = prim_type::Callable;
+    func->value = Any(LoxFunction(decl));
 
 }
 
@@ -349,5 +360,11 @@ AnyResult::ptr Interpreter::visit(WhileStmt* stmt)
 
 AnyResult::ptr Interpreter::visit(ReturnStmt* stmt)
 {
+    auto res = std::make_shared<AnyResult>();
+    if (stmt->expression) {
+        res = evaluate((stmt->expression));
+    }
+
+    throw RetPortGun(res);
 }
 

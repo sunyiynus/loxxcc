@@ -2,10 +2,26 @@
 #define EVALUATOR_H
 #include <map>
 #include <vector>
+#include <exception>
 #include "visitor_instance.h"
 #include "expression.h"
 #include "stmt.h"
 
+
+class RetPortGun: public std::exception {
+public:
+    // 构造函数，接收错误消息
+    // explicit bad_operator(const std::string& message) : message_(message) {}
+    explicit RetPortGun(AnyResult::ptr value) : returnValue(std::move(value)) {}
+
+    // 重写 what() 函数，返回错误消息
+    const char* what() const noexcept override {
+        return "Return statements";
+    }
+
+public:
+    AnyResult::ptr returnValue;
+};
 
 class Environment {
 public:
@@ -49,7 +65,7 @@ public:
 public:
     void interprete(const std::vector<AbsStmt::ptr>& stmts);
     void execute(AbsStmt::ptr stmt);
-    void execute(std::vector<AbsStmt::ptr>& stmts, std::shared_ptr<Environment> environment);
+    AnyResult::ptr execute(std::vector<AbsStmt::ptr>& stmts, std::shared_ptr<Environment> environment);
     AnyResult::ptr findSymbol(const std::string& symbol);
     AnyResult::ptr evaluate(AbsExpr::ptr expr);
     AnyResult::ptr visit(BinaryExpr* expr) override;

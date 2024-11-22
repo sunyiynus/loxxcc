@@ -10,9 +10,30 @@ static const char *const VM_MESSAGE = "Virtual Machine For Lox!";
 #include <iostream>
 #include <stdexcept>
 
-using namespace std;
+
+#include "chunk.h"
 
 
+class Vm
+{
+private:
+    chunk chunks;
+public:
+    void run() {
+        while (chunks) {
+            switch (chunks.readNextOp()[0])
+            {
+            case op_type::OP_RETURN :
+                /* code */
+                break;
+            
+            default:
+                break;
+            }
+        }
+    }
+
+};
 
 
 
