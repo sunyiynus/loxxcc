@@ -55,9 +55,6 @@ public:
         return ops[pos][BYTECODE_OPRAND_POS];
     }
 
-    operator bool() {
-        return !ops.empty();
-    }
 public:
     using ptr = std::shared_ptr<chunk>;
 };

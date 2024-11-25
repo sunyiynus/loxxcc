@@ -1,6 +1,6 @@
 project(clox_unittests)
 
-include_directories(${LOXXCC_HEADERS_DIR})
+include_directories(${LOXXVM_HEADERS_DIR})
 include_directories(${LOXXCC_INSTALL_INCLUDE_DIR})
 
 # 指定源文件所在的目录
@@ -10,7 +10,7 @@ message(${TEST_SOURCE_DIR})
 file(GLOB SOURCES ${TEST_SOURCE_DIR}/*.cpp)
 
 add_executable(clox_utests ${SOURCES})
-target_link_libraries(clox_utests gtest_main loxcompile )
+target_link_libraries(clox_utests gtest_main)
 
 
 # 设置目标的输出目录到 bin 目录

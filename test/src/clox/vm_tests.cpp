@@ -7,7 +7,6 @@ using namespace std;
 
 TEST(ChunkTest, DefaultInitialization) {
     chunk testChunk;
-    EXPECT_FALSE(testChunk); // 初始应该为空
     EXPECT_TRUE(testChunk.ops.empty());
     EXPECT_TRUE(testChunk.constValue.empty());
 }
@@ -68,12 +67,10 @@ TEST(ChunkTest, AddAndRetrieveConstants) {
 
 TEST(ChunkTest, BoolOperator) {
     chunk emptyChunk;
-    EXPECT_FALSE(emptyChunk);
 
     chunk nonEmptyChunk;
     bytecode_type bytecode = {static_cast<uint8_t>(op_type::OP_RETURN), 0};
     nonEmptyChunk.appendOp(bytecode);
-    EXPECT_TRUE(nonEmptyChunk);
 }
 
 TEST(ChunkTest, FileNameAndLines) {
