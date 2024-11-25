@@ -40,7 +40,8 @@ public:
     }
     void appendOp(const uint8_t code[BYTECODE_LEN])
     {
-
+        bytecode_type tmpCode = {code[BYTECODE_OP_POS], code[BYTECODE_OPRAND_POS]};
+        appendOp(tmpCode);
     }
 
     const bytecode_type& readByteCode(const size_t  pos) {

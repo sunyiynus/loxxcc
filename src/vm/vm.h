@@ -10,10 +10,10 @@ static const char *const VM_MESSAGE = "Virtual Machine For Lox!";
 #include <iostream>
 #include <stdexcept>
 #include <stack>
-#include "any.h"
 #include "chunk.h"
+#include "debug.h"
 
-
+#define DEBUG_TRACE_EXECUTION
 
 class Vm
 {
@@ -23,6 +23,7 @@ private:
     chunk chunks;
     uint64_t pc;
     std::stack<value_type> stack;
+    Debuger debuger;
 public:
     void addChunk(chunk&& chk) {
         chunks= std::move(chk);
@@ -48,9 +49,10 @@ public:
         }
     }
     void run() {
-#ifdef DEBUG_TRACE_EXECUTION
-#endif // DEBUG_TRACE_EXECUTION
         while (pc < chunks.ops.size()) {
+#ifdef DEBUG_TRACE_EXECUTION
+            debuger.disassembly(chunks.readByteCode(pc));
+#endif // DEBUG_TRACE_EXECUTION
             interpret(chunks.readByteCode(pc));
         }
     }

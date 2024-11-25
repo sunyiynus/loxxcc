@@ -28,7 +28,7 @@ public:
 
     void disassembly(const bytecode_type& op) {
         printHeader();
-        switch (op[BYTECODE_OP_POS])
+        switch (static_cast<op_type>(op[BYTECODE_OP_POS]))
         {
         case op_type::OP_RETURN :
             printReturnOp();

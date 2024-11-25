@@ -85,3 +85,12 @@ TEST(ChunkTest, FileNameAndLines) {
     EXPECT_EQ(testChunk.lines[0], 10);
     EXPECT_EQ(testChunk.lines[1], 20);
 }
+
+
+class VmTestScaffold : public ::testing::Test {
+protected:
+    void SetUp() override {
+        // Initialize tokens or other necessary setup before each test case
+
+    }
+};
