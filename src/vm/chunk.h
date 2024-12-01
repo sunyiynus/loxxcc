@@ -35,13 +35,21 @@ private:
 public:
     chunk(): pc (ops.begin()) {}
 public:
-    void appendOp(const bytecode_type& op) {
+    void appendOp(const bytecode_type& op, const uint64_t ln = 0) {
         ops.emplace_back(op);
+        lines.push_back(ln);
     }
-    void appendOp(const uint8_t code[BYTECODE_LEN])
+
+    void appendOp(const op_type op, const uint64_t ln = 0)
     {
-        bytecode_type tmpCode = {code[BYTECODE_OP_POS], code[BYTECODE_OPRAND_POS]};
-        appendOp(tmpCode);
+        bytecode_type tmpCode = {static_cast<uint8_t>(op), 0};
+        appendOp(tmpCode, ln);
+    }
+
+    void appendOp(const op_type op, const uint8_t value, const uint64_t ln = 0)
+    {
+        bytecode_type tmpCode = {static_cast<uint8_t>(op), value};
+        appendOp(tmpCode, ln);
     }
 
     const bytecode_type& readByteCode(const size_t  pos) {
@@ -54,6 +62,11 @@ public:
 
     const uint8_t readOprand(const size_t pos) {
         return ops[pos][BYTECODE_OPRAND_POS];
+    }
+
+    uint64_t storeValue(const value_type val) {
+        constValue.push_back(val);
+        return constValue.size() - 1;
     }
 
 public:

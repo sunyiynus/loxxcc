@@ -4,9 +4,10 @@ project(loxxcompiler C CXX)
 set(SOURCE_FILES
     vm.h
     vm.cpp
+    compile.cc
 )
 
-add_library(vm SHARED STATIC ${SOURCE_FILES})
+add_library(clox SHARED STATIC ${SOURCE_FILES})
 add_executable(vmrun vm.cpp)
 
 # 设置目标的输出目录到 bin 目录

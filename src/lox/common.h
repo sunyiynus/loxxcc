@@ -15,7 +15,7 @@ enum class TokenType {
     // one or more charactors 
     EQUAL, BANG, BANG_EQUAL, EQUAL_EQUAL, 
     GREATER, GREATER_EQUAL,
-    LESS, LESS_EQUAL, RIGHT_SHIFT, LEFT_SHIFT,
+    LESS, LESS_EQUAL, RIGHT_SHIFT, LEFT_SHIFT, AND, OR,
 
     // literal
     IDENTIFIER, STRING, NUMBER,
@@ -109,6 +109,8 @@ namespace Keywords
     const std::string This     = "this";
     const std::string True     = "true";
     const std::string False    = "false";
+    const std::string And      = "and";
+    const std::string Or       = "or";
 
     const std::map<std::string, TokenType> Table {  {Class,     TokenType::CLASS},
                                                     {Func,      TokenType::FUNC},
@@ -125,6 +127,8 @@ namespace Keywords
                                                     {True,      TokenType::TRUE},
                                                     {False,     TokenType::FALSE},
                                                     {For,       TokenType::FOR},
+                                                    {And,       TokenType::AND},
+                                                    {Or,        TokenType::OR},
                                                     };
 
 } // namespace Keywords
