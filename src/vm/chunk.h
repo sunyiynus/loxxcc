@@ -64,7 +64,7 @@ public:
         return ops[pos][BYTECODE_OPRAND_POS];
     }
 
-    uint64_t storeValue(const value_type val) {
+    uint8_t storeValue(const value_type val) {
         constValue.push_back(val);
         return constValue.size() - 1;
     }

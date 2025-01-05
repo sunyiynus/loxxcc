@@ -114,7 +114,7 @@ public:
         }
     }
 
-    void emitBytes(const op_type op, const uint8_t val)
+    void emitByte(const op_type op, const uint8_t val)
     {
         chuk->appendOp(op, val, (*currentItr).line);
     }
@@ -126,7 +126,9 @@ public:
 
     void expression(void);
     void parsePrecedence(const Precedence precedence);
-    void primary(void);
+    void grouping(void);
+    void binary(void);
+    void number(void);
     void unary(void);
 
 };
